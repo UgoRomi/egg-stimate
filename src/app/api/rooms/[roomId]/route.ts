@@ -24,12 +24,25 @@ export async function GET(request: NextRequest) {
   }
 
   // Create the user
-  const userName =
-    JSON.parse(cookies().get('user')?.value || '{}').name || DEFAULT_USER_NAME;
-  const { data: userData, error: userError } = await supabase
-    .from('users')
-    .insert({ room: roomId, name: userName })
-    .select();
+  const userCookie = cookies().get('user');
+  let userData, userError;
+  if (userCookie?.value) {
+    const user = JSON.parse(userCookie.value);
+    const { data: tempUserData, error: tempUserError } = await supabase
+      .from('users')
+      .upsert({ room: roomId, name: user.name, id: user.id })
+      .select();
+    userData = tempUserData;
+    userError = tempUserError;
+  } else {
+    const { data: tempUserData, error: tempUserError } = await supabase
+      .from('users')
+      .insert({ room: roomId, name: DEFAULT_USER_NAME })
+      .select();
+    userData = tempUserData?.[0];
+    userError = tempUserError;
+  }
+
   if (userError)
     return NextResponse.json({ message: userError.message }, { status: 500 });
   if (!userData)
@@ -38,10 +51,9 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
 
-  const user = userData[0];
   // @ts-ignore bug in NextJs types
-  cookies().set('user', JSON.stringify(user));
+  cookies().set('user', JSON.stringify(userData));
   return NextResponse.json({
-    ...user,
+    ...userData,
   });
 }
