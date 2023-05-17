@@ -10,6 +10,7 @@ let didInit = false;
 
 export function Users({ roomId }: { roomId: string }) {
   const [users, setUsers] = useState<User[]>([]);
+  const [showVotes, setShowVotes] = useState(false);
   useSWR(`/api/rooms/${roomId}/users`, fetcher, {
     onSuccess: (data) => {
       setUsers(data.users);
@@ -64,9 +65,12 @@ export function Users({ roomId }: { roomId: string }) {
   // list all the users
   return (
     <div className='w-full h-full bg-black'>
+      <button onClick={() => setShowVotes(!showVotes)}>
+        Toggle show votes
+      </button>
       {users.map((user) => (
         <div key={user.id}>
-          {user.name} voted {user.current_vote}
+          {user.name} voted {showVotes ? user.current_vote : 'MISTEROOOO'}
         </div>
       ))}
     </div>
