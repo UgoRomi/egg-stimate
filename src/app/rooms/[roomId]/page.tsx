@@ -9,7 +9,7 @@ import { fetcher } from '@/lib/utils';
 import { useState } from 'react';
 import useSWR from 'swr';
 
-export default function Page({ params }: { params: { roomId: number } }) {
+export default function Page({ params }: { params: { roomId: string } }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { data } = useSWR<User, string>(
     `/api/rooms/${params.roomId}`,

@@ -8,7 +8,7 @@ import useSWR from 'swr';
 
 let didInit = false;
 
-export function Users({ roomId }: { roomId: number }) {
+export function Users({ roomId }: { roomId: string }) {
   const [users, setUsers] = useState<User[]>([]);
   useSWR(`/api/rooms/${roomId}/users`, fetcher, {
     onSuccess: (data) => {
@@ -30,7 +30,7 @@ export function Users({ roomId }: { roomId: number }) {
             table: 'users',
           },
           (payload) => {
-            if (payload.new.room !== roomId) return;
+            if (payload.new.room.toString() !== roomId) return;
             setUsers((prev) => [...prev, payload.new as User]);
           }
         )
@@ -42,7 +42,7 @@ export function Users({ roomId }: { roomId: number }) {
             table: 'users',
           },
           (payload) => {
-            if (payload.new.room !== roomId) return;
+            if (payload.new.room.toString() !== roomId) return;
             setUsers((prev) => {
               const index = prev.findIndex(
                 (user) => user.id === payload.new.id
