@@ -8,7 +8,6 @@ export async function GET(request: NextRequest) {
   if (!rawRoomId) {
     return NextResponse.json({ status: 400, body: 'Bad request' });
   }
-
   // Check if the room exists
   const roomId = parseInt(rawRoomId, 10);
   const { data, error } = await supabase
@@ -22,7 +21,6 @@ export async function GET(request: NextRequest) {
   if (!data) {
     return NextResponse.json({ message: 'Not found' }, { status: 404 });
   }
-
   // Create the user
   const userCookie = cookies().get('user');
   let userData, userError;
@@ -32,7 +30,7 @@ export async function GET(request: NextRequest) {
       .from('users')
       .upsert({ room: roomId, name: user.name, id: user.id })
       .select();
-    userData = tempUserData;
+    userData = tempUserData?.[0];
     userError = tempUserError;
   } else {
     const { data: tempUserData, error: tempUserError } = await supabase
@@ -42,7 +40,6 @@ export async function GET(request: NextRequest) {
     userData = tempUserData?.[0];
     userError = tempUserError;
   }
-
   if (userError)
     return NextResponse.json({ message: userError.message }, { status: 500 });
   if (!userData)
@@ -50,7 +47,6 @@ export async function GET(request: NextRequest) {
       { message: 'Error creating user' },
       { status: 500 }
     );
-
   // @ts-ignore bug in NextJs types
   cookies().set('user', JSON.stringify(userData));
   return NextResponse.json({
