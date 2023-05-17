@@ -29,44 +29,24 @@ export interface Database {
       users: {
         Row: {
           created_at: string | null
+          current_vote: number | null
           id: number
           name: string
           room: number
         }
         Insert: {
           created_at?: string | null
+          current_vote?: number | null
           id?: number
           name: string
           room: number
         }
         Update: {
           created_at?: string | null
+          current_vote?: number | null
           id?: number
           name?: string
           room?: number
-        }
-      }
-      votes: {
-        Row: {
-          created_at: string | null
-          id: number
-          room_id: number
-          user_id: number
-          vote: number
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-          room_id: number
-          user_id: number
-          vote: number
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-          room_id?: number
-          user_id?: number
-          vote?: number
         }
       }
     }

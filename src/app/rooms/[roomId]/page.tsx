@@ -33,8 +33,8 @@ export default function Page({ params }: { params: { roomId: number } }) {
       )}
       <div>Welcome to room {params.roomId}</div>
       <div className='grid md:grid-cols-2 h-full'>
-        <Users roomId={params.roomId} />
-        <Cards />
+        <Users roomId={params.roomId} key={`users-${params.roomId}`} />
+        <Cards key={`cards-${params.roomId}`} />
       </div>
     </>
   );
