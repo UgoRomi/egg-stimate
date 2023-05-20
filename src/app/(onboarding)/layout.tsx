@@ -7,6 +7,15 @@ export default function RootLayout({
 }) {
   return (
     <>
+      <span className='w-full flex items-center justify-center mb-12'>
+        <Image
+          className='pt-4'
+          src='/***REMOVED***.svg'
+          alt='Logo ***REMOVED***'
+          width={141}
+          height={31}
+        />
+      </span>
       <span className='w-full flex items-center justify-center'>
         <Image src='/logo.svg' alt='Logo' width={180} height={160} />
       </span>
