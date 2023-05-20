@@ -10,7 +10,7 @@ export default function CreateRoomForm() {
 
   return (
     <form
-      className='flex gap-6 flex-col'
+      className='flex gap-6 flex-col justify-center items-center'
       action={async (formData) => {
         setPending(true);
         const { data, error } = await createRoom(formData);
@@ -22,11 +22,8 @@ export default function CreateRoomForm() {
         redirect(`/rooms/${data[0].id}`);
       }}
     >
-      <div>
-        <label
-          htmlFor='name'
-          className='block text-sm font-medium leading-6 text-gray-900'
-        >
+      <div className='max-w-xs min-w-[250px] h-'>
+        <label htmlFor='name' className='sr-only'>
           Room Name
         </label>
         <div className='mt-2'>
@@ -36,8 +33,8 @@ export default function CreateRoomForm() {
             type='text'
             name='name'
             id='name'
-            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6'
-            placeholder='Unobraslow'
+            className='block w-full rounded-md border-0 py-3 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6'
+            placeholder='Drip e Top Bella non valgono'
           />
         </div>
       </div>
@@ -46,7 +43,7 @@ export default function CreateRoomForm() {
         disabled={!name || pending}
         className='rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600'
       >
-        Create Room
+        Crea la room
       </button>
     </form>
   );
