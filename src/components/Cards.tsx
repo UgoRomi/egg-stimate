@@ -1,3 +1,4 @@
+'use client';
 import { vote } from '@/app/_actions';
 import { PropsWithChildren, useTransition } from 'react';
 
