@@ -36,6 +36,8 @@ function usersReducer(
   state: Set<User>,
   action: AddUserAction | UpdateUserAction | AddMultipleUserAction
 ) {
+  // Using a set here is stupid since we only need to check for
+  // duplicated by ID, but I'm too lazy to change it now
   const newState = new Set(state);
   switch (action.event) {
     case UserActionType.INSERT:

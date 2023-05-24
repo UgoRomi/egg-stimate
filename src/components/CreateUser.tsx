@@ -1,13 +1,11 @@
 'use client';
 
 import { createRoomUser } from '@/app/_actions';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export function CreateUserForm({ roomId }: { roomId: string }) {
   const [name, setName] = useState('');
   const [isPending, setIsPending] = useState(false);
-  const router = useRouter();
 
   return (
     <form
@@ -20,7 +18,8 @@ export function CreateUserForm({ roomId }: { roomId: string }) {
         if (error) {
           console.error(error);
         } else {
-          router.push(`/rooms/${roomId}`);
+          // Te lo sai perche' router.push qua non funziona? Io no
+          window.location.href = `/rooms/${roomId}`;
         }
       }}
     >
