@@ -1,12 +1,13 @@
 'use client';
 
 import { createRoomUser } from '@/app/_actions';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export function CreateUserForm({ roomId }: { roomId: string }) {
   const [name, setName] = useState('');
   const [isPending, setIsPending] = useState(false);
+  const router = useRouter();
 
   return (
     <form
@@ -19,7 +20,7 @@ export function CreateUserForm({ roomId }: { roomId: string }) {
         if (error) {
           console.error(error);
         } else {
-          redirect(`/rooms/${roomId}`);
+          router.push(`/rooms/${roomId}`);
         }
       }}
     >

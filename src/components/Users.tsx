@@ -1,20 +1,72 @@
 'use client';
 
 import { supabase } from '@/lib/supabase';
-import { User } from '@/lib/types';
 import { fetcher } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import useSWR from 'swr';
 import Image from 'next/image';
+import { Table } from './Table';
+import { User } from '@/lib/types';
 
 let didInit = false;
+let initialFetch = false;
+
+enum UserActionType {
+  INSERT = 'INSERT',
+  INSERT_MULTI = 'INSERT_MULTI',
+  UPDATE = 'UPDATE',
+}
+
+interface AddUserAction {
+  event: UserActionType.INSERT;
+  payload: User;
+}
+
+interface AddMultipleUserAction {
+  event: UserActionType.INSERT_MULTI;
+  payload: User[];
+}
+
+interface UpdateUserAction {
+  event: UserActionType.UPDATE;
+  payload: User;
+}
+
+function usersReducer(
+  state: Set<User>,
+  action: AddUserAction | UpdateUserAction | AddMultipleUserAction
+) {
+  const newState = new Set(state);
+  switch (action.event) {
+    case UserActionType.INSERT:
+      return newState.add(action.payload);
+    case UserActionType.UPDATE:
+      newState.forEach((user) => {
+        if (user.id === action.payload.id) {
+          newState.delete(user);
+        }
+      });
+      newState.add(action.payload);
+      return newState;
+    case UserActionType.INSERT_MULTI:
+      action.payload.forEach((user) => {
+        newState.add(user);
+      });
+      return newState;
+    default:
+      return state;
+  }
+}
 
 export function Users({ roomId }: { roomId: string }) {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, dispatch] = useReducer(usersReducer, new Set<User>());
   const [showVotes, setShowVotes] = useState(false);
   useSWR(`/api/rooms/${roomId}/users`, fetcher, {
     onSuccess: (data) => {
-      setUsers(data.users);
+      if (!initialFetch) {
+        initialFetch = true;
+        dispatch({ event: UserActionType.INSERT_MULTI, payload: data.users });
+      }
     },
   });
 
@@ -33,7 +85,10 @@ export function Users({ roomId }: { roomId: string }) {
           },
           (payload) => {
             if (payload.new.room.toString() !== roomId) return;
-            setUsers((prev) => [...prev, payload.new as User]);
+            dispatch({
+              event: UserActionType.INSERT,
+              payload: payload.new as User,
+            });
           }
         )
         .on(
@@ -45,14 +100,9 @@ export function Users({ roomId }: { roomId: string }) {
           },
           (payload) => {
             if (payload.new.room.toString() !== roomId) return;
-            setUsers((prev) => {
-              const index = prev.findIndex(
-                (user) => user.id === payload.new.id
-              );
-              if (index === -1) return prev;
-              const newUsers = [...prev];
-              newUsers[index] = payload.new as User;
-              return newUsers;
+            dispatch({
+              event: UserActionType.UPDATE,
+              payload: payload.new as User,
             });
           }
         )
@@ -62,6 +112,8 @@ export function Users({ roomId }: { roomId: string }) {
       };
     }
   }, [roomId]);
+
+  console.log(users);
 
   // list all the users
   return (
@@ -81,11 +133,7 @@ export function Users({ roomId }: { roomId: string }) {
           Reveal Cards
         </button>
       </div>
-      <div className='flex-grow flex justify-center items-center'>
-        <div className='h-72 w-48 rounded-full bg-orange-600 flex items-center justify-center'>
-          <p className='text-white'>Tutti pronti?</p>
-        </div>
-      </div>
+      <Table roomId={roomId} users={Array.from(users)} />
       {/* {users.map((user) => (
         <div key={user.id}>
           {user.name} voted {showVotes ? user.current_vote : 'MISTEROOOO'}

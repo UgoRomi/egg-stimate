@@ -6,7 +6,18 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateAreas: {
+        table: [
+          'top    top    top',
+          'left   table   right',
+          'bottom   bottom  bottom',
+        ],
+      },
+    },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@savvywombat/tailwindcss-grid-areas'),
+  ],
 };

@@ -38,6 +38,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "@savvywombat/tailwindcss-grid-areas": "^3.0.1",
     "encoding": "^0.1.13",
     "supabase": ">=1.8.1"
   }

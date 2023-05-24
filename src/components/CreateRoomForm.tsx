@@ -1,12 +1,13 @@
 'use client';
 
 import { createRoom } from '@/app/_actions';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function CreateRoomForm() {
   const [name, setName] = useState('');
   const [pending, setPending] = useState(false);
+  const router = useRouter();
 
   return (
     <form
@@ -19,7 +20,7 @@ export default function CreateRoomForm() {
           console.error(error);
           return;
         }
-        redirect(`/rooms/${data[0].id}`);
+        router.push(`/rooms/${data[0].id}`);
       }}
     >
       <div className='max-w-xs min-w-[250px] h-'>

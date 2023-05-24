@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname.endsWith('/signup')) return;
   // get the room id from the url
   const urlParts = request.nextUrl.pathname.split('/');
   const roomId = parseInt(urlParts[2]);
