@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
+  //#region check if room exists
   // get the room id from the url
   const urlParts = request.nextUrl.pathname.split('/');
   const roomId = parseInt(urlParts[2]);
@@ -15,7 +16,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url));
   }
   if (request.nextUrl.pathname.endsWith('/signup')) return;
+  //#endregion
 
+  //#region check if cookie exists
   // if there is no user cookie redirect to signup
   const userCookie = request.cookies.get('user')?.value;
   if (!userCookie) {
@@ -23,33 +26,24 @@ export async function middleware(request: NextRequest) {
       new URL(`/rooms/${roomId}/signup`, request.url)
     );
   }
+  //#endregion
 
+  //#region upsert user
   // otherwise check if the user's ID is already in the room
-  const { data: roomUsers, error: roomUsersError } = await supabase
-    .from('users')
-    .select()
-    .eq('room', roomId);
-  if (roomUsersError) {
+  const parsedUserCookie = JSON.parse(userCookie);
+  // upsert the user
+  const { data, error: upsertError } = await supabase.from('users').upsert({ ...parsedUserCookie, room: roomId }).select();
+  console.log('upsertError', upsertError)
+  console.log('data', data)
+  if (upsertError || !data) {
     return NextResponse.redirect(
       new URL(`/rooms/${roomId}/signup`, request.url)
     );
   }
-  const parsedUserCookie = JSON.parse(userCookie);
-  const user = roomUsers?.find((u) => u.id === parsedUserCookie.id);
-  if (!user) {
-    const { data, error } = await supabase
-      .from('users')
-      .insert({ name: parsedUserCookie.name, room: roomId })
-      .select();
-    if (error || !data) {
-      return NextResponse.redirect(
-        new URL(`/rooms/${roomId}/signup`, request.url)
-      );
-    }
-    const response = NextResponse.next()
-    response.cookies.set('user', JSON.stringify(data[0]));
-    return response
-  }
+  const response = NextResponse.next()
+  response.cookies.set('user', JSON.stringify(data[0]));
+  return response
+  //#endregion
 }
 
 // See "Matching Paths" below to learn more

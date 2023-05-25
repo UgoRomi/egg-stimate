@@ -1,6 +1,6 @@
-'use client';
-
+'use client'
 import { createRoomUser } from '@/app/_actions';
+import { SubmitButton } from './SubmitButton';
 import { useState } from 'react';
 
 export function CreateUserForm({ roomId }: { roomId: string }) {
@@ -12,8 +12,6 @@ export function CreateUserForm({ roomId }: { roomId: string }) {
       action={async (formData) => {
         formData.append('roomId', roomId);
         await createRoomUser(formData);
-        // Te lo sai perche' router.push qua non funziona? Io no
-        window.location.href = `/rooms/${roomId}`;
       }}
     >
       <div className='max-w-xs min-w-[250px] h-'>
@@ -32,13 +30,7 @@ export function CreateUserForm({ roomId }: { roomId: string }) {
           />
         </div>
       </div>
-      <button
-        type='submit'
-        disabled={!name}
-        className='rounded-full bg-orange-600 cursor-pointer px-5 py-3 text-md text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-orange-600 disabled:hover:cursor-not-allowed disabled:focus-visible:outline-offset-0 disabled:focus-visible:outline-orange-600 disabled:focus-visible:outline-2 disabled:focus-visible:outline'
-      >
-        Conferma
-      </button>
+      <SubmitButton isDisabled={!name} />
     </form>
   );
 }

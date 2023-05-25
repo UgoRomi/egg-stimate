@@ -2,6 +2,7 @@
 
 import { DEFAULT_USER_NAME } from '@/lib/consts';
 import { supabase } from '@/lib/supabase';
+import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 
 export async function createRoom(formData: FormData) {
@@ -10,7 +11,9 @@ export async function createRoom(formData: FormData) {
     .from('rooms')
     .insert({ name })
     .select();
-  return { data, error };
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error('No data returned');
+  return redirect(`/rooms/${data[0].id}`);
 }
 
 export async function createRoomUser(formData: FormData) {
@@ -18,20 +21,20 @@ export async function createRoomUser(formData: FormData) {
   const roomId = formData.get('roomId') as string;
 
   const userCookie = cookies().get('user')?.value;
+
+  // If user already exists in this room, just update the name
   if (userCookie) {
     const user = JSON.parse(userCookie);
     if (user.room === parseInt(roomId)) {
-      if (user.name === name) return { data: [user] };
       const { data, error } = await supabase.from('users').update({ name }).eq('id', user.id).select();
       if (error) {
         throw new Error(error.message);
       }
       // @ts-ignore bug in NextJs types
       cookies().set('user', JSON.stringify(data[0]));
-      return { data };
+      return redirect(`/rooms/${roomId}`);
     }
   }
-
 
   const { data, error } = await supabase
     .from('users')
@@ -44,7 +47,7 @@ export async function createRoomUser(formData: FormData) {
 
   // @ts-ignore bug in NextJs types
   cookies().set('user', JSON.stringify(data[0]));
-  return { data };
+  return redirect(`/rooms/${roomId}`);
 }
 
 export async function updateUserName(formData: FormData) {

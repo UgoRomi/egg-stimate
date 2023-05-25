@@ -1,24 +1,12 @@
-'use client';
-
 import { createRoom } from '@/app/_actions';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { SubmitButton } from './SubmitButton';
 
 export default function CreateRoomForm() {
-  const [name, setName] = useState('');
-  const router = useRouter();
 
   return (
     <form
       className='flex gap-6 flex-col justify-center items-center'
-      action={async (formData) => {
-        const { data, error } = await createRoom(formData);
-        if (error || !data) {
-          console.error(error);
-          return;
-        }
-        router.push(`/rooms/${data[0].id}`);
-      }}
+      action={createRoom}
     >
       <div className='max-w-xs min-w-[250px] h-'>
         <label htmlFor='name' className='sr-only'>
@@ -26,8 +14,6 @@ export default function CreateRoomForm() {
         </label>
         <div className='mt-2'>
           <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
             type='text'
             name='name'
             id='name'
@@ -36,13 +22,7 @@ export default function CreateRoomForm() {
           />
         </div>
       </div>
-      <button
-        type='submit'
-        disabled={!name}
-        className='rounded-full bg-orange-600 cursor-pointer px-5 py-3 text-md text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:opacity-50 disabled:cursor-not-allowed'
-      >
-        Crea la room
-      </button>
-    </form>
+      <SubmitButton />
+    </form >
   );
 }
