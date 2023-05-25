@@ -96,6 +96,7 @@ export function Users({ roomId }: { roomId: string }) {
             table: 'users',
           },
           (payload) => {
+            console.log('user update', payload)
             if (payload.new.room.toString() !== roomId) return;
             dispatch({
               event: UserActionType.UPDATE,
@@ -113,6 +114,7 @@ export function Users({ roomId }: { roomId: string }) {
           table: 'rooms',
         },
         (payload) => {
+          console.log(payload);
           if (payload.new.id.toString() !== roomId) return;
           setShowVotes(payload.new.show_votes);
         }
