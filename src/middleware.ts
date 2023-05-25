@@ -46,8 +46,10 @@ export async function middleware(request: NextRequest) {
         new URL(`/rooms/${roomId}/signup`, request.url)
       );
     }
+    const response = NextResponse.next()
+    response.cookies.set('user', JSON.stringify(data[0]));
+    return response
   }
-  return NextResponse.next();
 }
 
 // See "Matching Paths" below to learn more

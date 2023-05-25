@@ -6,16 +6,13 @@ import { useState } from 'react';
 
 export default function CreateRoomForm() {
   const [name, setName] = useState('');
-  const [pending, setPending] = useState(false);
   const router = useRouter();
 
   return (
     <form
       className='flex gap-6 flex-col justify-center items-center'
       action={async (formData) => {
-        setPending(true);
         const { data, error } = await createRoom(formData);
-        setPending(false);
         if (error || !data) {
           console.error(error);
           return;
@@ -41,8 +38,8 @@ export default function CreateRoomForm() {
       </div>
       <button
         type='submit'
-        disabled={!name || pending}
-        className='rounded-full bg-orange-600 cursor-pointer px-5 py-3 text-md text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600'
+        disabled={!name}
+        className='rounded-full bg-orange-600 cursor-pointer px-5 py-3 text-md text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:opacity-50 disabled:cursor-not-allowed'
       >
         Crea la room
       </button>
