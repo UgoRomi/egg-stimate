@@ -16,6 +16,23 @@ export async function createRoom(formData: FormData) {
 export async function createRoomUser(formData: FormData) {
   const name = (formData.get('name') as string) || DEFAULT_USER_NAME;
   const roomId = formData.get('roomId') as string;
+
+  const userCookie = cookies().get('user')?.value;
+  if (userCookie) {
+    const user = JSON.parse(userCookie);
+    if (user.room === parseInt(roomId)) {
+      if (user.name === name) return { data: [user] };
+      const { data, error } = await supabase.from('users').update({ name }).eq('id', user.id).select();
+      if (error) {
+        throw new Error(error.message);
+      }
+      // @ts-ignore bug in NextJs types
+      cookies().set('user', JSON.stringify(data[0]));
+      return { data };
+    }
+  }
+
+
   const { data, error } = await supabase
     .from('users')
     .insert({ name, room: parseInt(roomId) })
@@ -27,7 +44,7 @@ export async function createRoomUser(formData: FormData) {
 
   // @ts-ignore bug in NextJs types
   cookies().set('user', JSON.stringify(data[0]));
-  return { data, error };
+  return { data };
 }
 
 export async function updateUserName(formData: FormData) {
