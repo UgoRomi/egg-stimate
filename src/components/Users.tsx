@@ -2,11 +2,12 @@
 
 import { supabase } from '@/lib/supabase';
 import { fetcher } from '@/lib/utils';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState, useTransition } from 'react';
 import useSWR from 'swr';
 import Image from 'next/image';
 import { Table } from './Table';
 import { User } from '@/lib/types';
+import { resetVotes, showHideVotes } from '@/app/_actions';
 
 let didInit = false;
 let initialFetch = false;
@@ -63,6 +64,8 @@ function usersReducer(
 export function Users({ roomId }: { roomId: string }) {
   const [users, dispatch] = useReducer(usersReducer, new Set<User>());
   const [showVotes, setShowVotes] = useState(false);
+  const [, startTransition] = useTransition();
+
   useSWR(`/api/rooms/${roomId}/users`, fetcher, {
     onSuccess: (data) => {
       if (!initialFetch) {
@@ -109,15 +112,26 @@ export function Users({ roomId }: { roomId: string }) {
           }
         )
         .subscribe();
+
+      const roomsChannel = supabase.channel('rooms').on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'rooms',
+        },
+        (payload) => {
+          if (payload.new.id.toString() !== roomId) return;
+          setShowVotes(payload.new.show_votes);
+        }
+      ).subscribe();
       return () => {
         supabase.removeChannel(usersChannel);
+        supabase.removeChannel(roomsChannel);
       };
     }
   }, [roomId]);
 
-  console.log(users);
-
-  // list all the users
   return (
     <div className='w-full h-full flex flex-col'>
       <div className='flex justify-between p-4'>
@@ -130,17 +144,19 @@ export function Users({ roomId }: { roomId: string }) {
         <button
           type='button'
           className='rounded-full bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600'
-          onClick={() => setShowVotes(!showVotes)}
+          onClick={() => startTransition(() => resetVotes(roomId))}
         >
-          Reveal Cards
+          Resetta voti
+        </button>
+        <button
+          type='button'
+          className='rounded-full bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600'
+          onClick={() => startTransition(() => showHideVotes(roomId, !showVotes))}
+        >
+          Toggle Cards
         </button>
       </div>
-      <Table roomId={roomId} users={Array.from(users)} />
-      {/* {users.map((user) => (
-        <div key={user.id}>
-          {user.name} voted {showVotes ? user.current_vote : 'MISTEROOOO'}
-        </div>
-      ))} */}
+      <Table users={Array.from(users)} showVotes={showVotes} />
     </div>
   );
 }

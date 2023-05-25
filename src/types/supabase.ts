@@ -14,16 +14,19 @@ export interface Database {
           created_at: string | null
           id: number
           name: string
+          show_votes: boolean
         }
         Insert: {
           created_at?: string | null
           id?: number
           name: string
+          show_votes?: boolean
         }
         Update: {
           created_at?: string | null
           id?: number
           name?: string
+          show_votes?: boolean
         }
       }
       users: {

@@ -66,3 +66,11 @@ export async function vote(value: number) {
 
   return;
 }
+
+export async function resetVotes(roomId: string) {
+  await supabase.from('users').update({ current_vote: null }).eq('room', roomId);
+}
+
+export async function showHideVotes(roomId: string, show: boolean) {
+  await supabase.from('rooms').update({ show_votes: show }).eq('id', roomId);
+}

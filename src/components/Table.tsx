@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 
-function Card({ username, vote }: { username: string; vote: number | null }) {
+function Card({ username, vote, showVote }: { username: string; vote: number | null, showVote: boolean }) {
   return (
     <div className='flex flex-col justify-center items-center'>
       <div
@@ -15,7 +15,7 @@ function Card({ username, vote }: { username: string; vote: number | null }) {
         {vote !== null && (
           <AspectRatio.Root ratio={93 / 146}>
             <Image
-              src={`/cards/${vote}.svg`}
+              src={showVote ? `/cards/${vote}.svg` : '/cards/back.svg'}
               alt={`Scrum poker card ${vote}`}
               style={{ objectFit: 'contain' }}
               fill
@@ -44,8 +44,7 @@ function CardContainer({
   );
 }
 
-export function Table({ roomId, users }: { roomId: string; users: User[] }) {
-  console.log(users);
+export function Table({ users, showVotes }: { users: User[], showVotes: boolean }) {
   const leftUsers = users.splice(2, 1);
   const rightUsers = users.splice(3, 1);
   const middleIndex = Math.floor(users.length / 2);
@@ -61,22 +60,22 @@ export function Table({ roomId, users }: { roomId: string; users: User[] }) {
       </div>
       <CardContainer className='grid-in-top'>
         {topUsers.map((user) => (
-          <Card key={user.id} username={user.name} vote={user.current_vote} />
+          <Card key={user.id} username={user.name} vote={user.current_vote} showVote={showVotes} />
         ))}
       </CardContainer>
       <CardContainer className='grid-in-right'>
         {rightUsers.map((user) => (
-          <Card key={user.id} username={user.name} vote={user.current_vote} />
+          <Card key={user.id} username={user.name} vote={user.current_vote} showVote={showVotes} />
         ))}
       </CardContainer>
       <CardContainer className='grid-in-bottom'>
         {bottomUsers.map((user) => (
-          <Card key={user.id} username={user.name} vote={user.current_vote} />
+          <Card key={user.id} username={user.name} vote={user.current_vote} showVote={showVotes} />
         ))}
       </CardContainer>
       <CardContainer className='grid-in-left'>
         {leftUsers.map((user) => (
-          <Card key={user.id} username={user.name} vote={user.current_vote} />
+          <Card key={user.id} username={user.name} vote={user.current_vote} showVote={showVotes} />
         ))}
       </CardContainer>
     </div>
