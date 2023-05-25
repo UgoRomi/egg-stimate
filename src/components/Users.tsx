@@ -34,35 +34,27 @@ interface UpdateUserAction {
 }
 
 function usersReducer(
-  state: Set<User>,
+  state: Map<number, User>,
   action: AddUserAction | UpdateUserAction | AddMultipleUserAction
 ) {
-  // Using a set here is stupid since we only need to check for
-  // duplicated by ID, but I'm too lazy to change it now
-  const newState = new Set(state);
+  const newState = new Map(state);
   switch (action.event) {
     case UserActionType.INSERT:
-      return newState.add(action.payload);
+      return newState.set(action.payload.id, action.payload);
     case UserActionType.UPDATE:
-      newState.forEach((user) => {
-        if (user.id === action.payload.id) {
-          newState.delete(user);
-        }
-      });
-      newState.add(action.payload);
-      return newState;
+      return newState.set(action.payload.id, action.payload);
     case UserActionType.INSERT_MULTI:
       action.payload.forEach((user) => {
-        newState.add(user);
+        newState.set(user.id, user);
       });
       return newState;
     default:
-      return state;
+      return newState;
   }
 }
 
 export function Users({ roomId }: { roomId: string }) {
-  const [users, dispatch] = useReducer(usersReducer, new Set<User>());
+  const [users, dispatch] = useReducer(usersReducer, new Map<number, User>);
   const [showVotes, setShowVotes] = useState(false);
   const [, startTransition] = useTransition();
 
@@ -156,7 +148,7 @@ export function Users({ roomId }: { roomId: string }) {
           Toggle Cards
         </button>
       </div>
-      <Table users={Array.from(users)} showVotes={showVotes} />
+      <Table users={Array.from(users.values())} showVotes={showVotes} />
     </div>
   );
 }
