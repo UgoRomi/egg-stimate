@@ -20,3 +20,9 @@ export function getUsernameFromCookie(): string | undefined {
   }
   return undefined;
 }
+
+export function getRoomIdFromUrl(): string | undefined {
+  const urlParts = window.location.pathname.split('/');
+  const roomId = urlParts[2];
+  return roomId || undefined;
+}

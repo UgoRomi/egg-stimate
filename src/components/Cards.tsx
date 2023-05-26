@@ -1,21 +1,37 @@
 'use client';
-import { vote } from '@/app/_actions';
+import { showHideVotes, vote } from '@/app/_actions';
 import Image from 'next/image';
 import { useTransition } from 'react';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import * as Avatar from '@radix-ui/react-avatar';
-import { getUsernameFromCookie } from '@/lib/utils';
+import { getRoomIdFromUrl, getUsernameFromCookie } from '@/lib/utils';
+import { useStore } from '@/lib/zustand';
 
 interface CardProps {
   value: number;
 }
 
 const Card: React.FC<CardProps> = ({ value }) => {
-  let [isPending, startTransition] = useTransition();
+  let [, startTransition] = useTransition();
+  const users = useStore((state) => state.users);
+  const currentUser = useStore((state) => state.getCurrentUser());
+
   return (
     <div
       className='max-w-[93px] max-h-[146px] cursor-pointer'
-      onClick={() => startTransition(() => vote(value))}
+      onClick={() => {
+        startTransition(() => vote(value));
+        // if every user has voted, toggle the votes
+        if (
+          Array.from(users.values()).every(
+            (user) => user.current_vote !== null || user.id === currentUser?.id
+          )
+        ) {
+          const roomId = getRoomIdFromUrl();
+          if (!roomId) return;
+          startTransition(() => showHideVotes(roomId, true));
+        }
+      }}
     >
       <AspectRatio.Root ratio={93 / 146}>
         <Image

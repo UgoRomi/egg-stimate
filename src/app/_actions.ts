@@ -26,7 +26,11 @@ export async function createRoomUser(formData: FormData) {
   if (userCookie) {
     const user = JSON.parse(userCookie);
     if (user.room === parseInt(roomId)) {
-      const { data, error } = await supabase.from('users').update({ name }).eq('id', user.id).select();
+      const { data, error } = await supabase
+        .from('users')
+        .update({ name })
+        .eq('id', user.id)
+        .select();
       if (error) {
         throw new Error(error.message);
       }
@@ -88,7 +92,11 @@ export async function vote(value: number) {
 }
 
 export async function resetVotes(roomId: string) {
-  await supabase.from('users').update({ current_vote: null }).eq('room', roomId);
+  await supabase
+    .from('users')
+    .update({ current_vote: null })
+    .eq('room', roomId);
+  await supabase.from('rooms').update({ show_votes: false }).eq('id', roomId);
 }
 
 export async function showHideVotes(roomId: string, show: boolean) {

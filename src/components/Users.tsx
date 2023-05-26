@@ -14,7 +14,6 @@ let didInit = false;
 let initialFetch = false;
 
 export function Users({ roomId }: { roomId: string }) {
-  const users = useStore((state) => state.users);
   const addUser = useStore((state) => state.addUser);
   const addUsers = useStore((state) => state.addUsers);
   const updateUser = useStore((state) => state.updateUser);
