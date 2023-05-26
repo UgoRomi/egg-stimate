@@ -1,7 +1,7 @@
 'use client';
 import { vote } from '@/app/_actions';
 import Image from 'next/image';
-import { PropsWithChildren, useTransition } from 'react';
+import { useTransition } from 'react';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import * as Avatar from '@radix-ui/react-avatar';
 import { getUsernameFromCookie } from '@/lib/utils';

@@ -8,53 +8,16 @@ import Image from 'next/image';
 import { Table } from './Table';
 import { User } from '@/lib/types';
 import { resetVotes, showHideVotes } from '@/app/_actions';
+import { useStore } from '@/lib/zustand';
 
 let didInit = false;
 let initialFetch = false;
 
-enum UserActionType {
-  INSERT = 'INSERT',
-  INSERT_MULTI = 'INSERT_MULTI',
-  UPDATE = 'UPDATE',
-}
-
-interface AddUserAction {
-  event: UserActionType.INSERT;
-  payload: User;
-}
-
-interface AddMultipleUserAction {
-  event: UserActionType.INSERT_MULTI;
-  payload: User[];
-}
-
-interface UpdateUserAction {
-  event: UserActionType.UPDATE;
-  payload: User;
-}
-
-function usersReducer(
-  state: Map<number, User>,
-  action: AddUserAction | UpdateUserAction | AddMultipleUserAction
-) {
-  const newState = new Map(state);
-  switch (action.event) {
-    case UserActionType.INSERT:
-      return newState.set(action.payload.id, action.payload);
-    case UserActionType.UPDATE:
-      return newState.set(action.payload.id, action.payload);
-    case UserActionType.INSERT_MULTI:
-      action.payload.forEach((user) => {
-        newState.set(user.id, user);
-      });
-      return newState;
-    default:
-      return newState;
-  }
-}
-
 export function Users({ roomId }: { roomId: string }) {
-  const [users, dispatch] = useReducer(usersReducer, new Map<number, User>);
+  const users = useStore((state) => state.users);
+  const addUser = useStore((state) => state.addUser);
+  const addUsers = useStore((state) => state.addUsers);
+  const updateUser = useStore((state) => state.updateUser);
   const [showVotes, setShowVotes] = useState(false);
   const [, startTransition] = useTransition();
 
@@ -62,7 +25,7 @@ export function Users({ roomId }: { roomId: string }) {
     onSuccess: (data) => {
       if (!initialFetch) {
         initialFetch = true;
-        dispatch({ event: UserActionType.INSERT_MULTI, payload: data.users });
+        addUsers(data.users);
       }
     },
   });
@@ -82,10 +45,7 @@ export function Users({ roomId }: { roomId: string }) {
           },
           (payload) => {
             if (payload.new.room.toString() !== roomId) return;
-            dispatch({
-              event: UserActionType.INSERT,
-              payload: payload.new as User,
-            });
+            addUser(payload.new as User);
           }
         )
         .on(
@@ -96,35 +56,33 @@ export function Users({ roomId }: { roomId: string }) {
             table: 'users',
           },
           (payload) => {
-            console.log('user update', payload)
             if (payload.new.room.toString() !== roomId) return;
-            dispatch({
-              event: UserActionType.UPDATE,
-              payload: payload.new as User,
-            });
+            updateUser(payload.new as User);
           }
         )
         .subscribe();
 
-      const roomsChannel = supabase.channel('rooms').on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'rooms',
-        },
-        (payload) => {
-          console.log(payload);
-          if (payload.new.id.toString() !== roomId) return;
-          setShowVotes(payload.new.show_votes);
-        }
-      ).subscribe();
+      const roomsChannel = supabase
+        .channel('rooms')
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'rooms',
+          },
+          (payload) => {
+            if (payload.new.id.toString() !== roomId) return;
+            setShowVotes(payload.new.show_votes);
+          }
+        )
+        .subscribe();
       return () => {
         supabase.removeChannel(usersChannel);
         supabase.removeChannel(roomsChannel);
       };
     }
-  }, [roomId]);
+  }, [addUser, roomId, updateUser]);
 
   return (
     <div className='w-full h-full flex flex-col'>
@@ -145,12 +103,14 @@ export function Users({ roomId }: { roomId: string }) {
         <button
           type='button'
           className='rounded-full bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600'
-          onClick={() => startTransition(() => showHideVotes(roomId, !showVotes))}
+          onClick={() =>
+            startTransition(() => showHideVotes(roomId, !showVotes))
+          }
         >
           Toggle Cards
         </button>
       </div>
-      <Table users={Array.from(users.values())} showVotes={showVotes} />
+      <Table showVotes={showVotes} />
     </div>
   );
 }
