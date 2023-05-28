@@ -17,7 +17,8 @@ export function Users({ roomId }: { roomId: string }) {
   const addUser = useStore((state) => state.addUser);
   const addUsers = useStore((state) => state.addUsers);
   const updateUser = useStore((state) => state.updateUser);
-  const [showVotes, setShowVotes] = useState(false);
+  const showVotes = useStore((state) => state.showVotes);
+  const setShowVotes = useStore((state) => state.setShowVotes);
   const [, startTransition] = useTransition();
 
   useSWR(`/api/rooms/${roomId}/users`, fetcher, {
@@ -81,7 +82,7 @@ export function Users({ roomId }: { roomId: string }) {
         supabase.removeChannel(roomsChannel);
       };
     }
-  }, [addUser, roomId, updateUser]);
+  }, [addUser, roomId, updateUser, setShowVotes]);
 
   return (
     <div className='w-full h-full flex flex-col'>
@@ -100,16 +101,15 @@ export function Users({ roomId }: { roomId: string }) {
           Resetta voti
         </button>
         <button
+          disabled={showVotes}
           type='button'
-          className='rounded-full bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600'
-          onClick={() =>
-            startTransition(() => showHideVotes(roomId, !showVotes))
-          }
+          className='rounded-full bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:opacity-50 disabled:cursor-not-allowed'
+          onClick={() => startTransition(() => showHideVotes(roomId, true))}
         >
-          Toggle Cards
+          Mostra voti
         </button>
       </div>
-      <Table showVotes={showVotes} />
+      <Table />
     </div>
   );
 }

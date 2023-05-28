@@ -46,6 +46,7 @@ const Card: React.FC<CardProps> = ({ value }) => {
 
 export function Cards() {
   const username = getUsernameFromCookie();
+  const showVotes = useStore((state) => state.showVotes);
 
   return (
     <div className='bg-white p-4 flex items-center flex-col'>
@@ -63,21 +64,25 @@ export function Cards() {
           Invite players
         </button>
       </div>
-      <div className='grid grid-cols-[repeat(3,100px)] gap-7'>
-        <p className='col-span-3'>Scegli la tua carta 👇🏻</p>
-        <Card value={0} />
-        <Card value={1} />
-        <Card value={2} />
-        <Card value={3} />
-        <Card value={4} />
-        <Card value={5} />
-        <Card value={6} />
-        <Card value={7} />
-        <Card value={8} />
-        <Card value={9} />
-        <Card value={10} />
-        <Card value={11} />
-      </div>
+      {showVotes ? (
+        <div>I risultati sono: un segreto</div>
+      ) : (
+        <div className='grid grid-cols-[repeat(3,100px)] gap-7'>
+          <p className='col-span-3'>Scegli la tua carta 👇🏻</p>
+          <Card value={0} />
+          <Card value={1} />
+          <Card value={2} />
+          <Card value={3} />
+          <Card value={4} />
+          <Card value={5} />
+          <Card value={6} />
+          <Card value={7} />
+          <Card value={8} />
+          <Card value={9} />
+          <Card value={10} />
+          <Card value={11} />
+        </div>
+      )}
     </div>
   );
 }

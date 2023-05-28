@@ -3,7 +3,9 @@ import { User } from './types';
 
 interface State {
   users: Map<number, User>;
+  showVotes: boolean;
   getCurrentUser: () => User | undefined;
+  setShowVotes: (show: boolean) => void;
   addUser: (user: User) => void;
   addUsers: (users: User[]) => void;
   updateUser: (user: User) => void;
@@ -11,6 +13,7 @@ interface State {
 
 export const useStore = create<State>()((set) => ({
   users: new Map(),
+  showVotes: false,
   addUser: (user: User) =>
     set((state) => {
       const newUsers = new Map(state.users);
@@ -37,4 +40,5 @@ export const useStore = create<State>()((set) => ({
     );
     return user;
   },
+  setShowVotes: (show: boolean) => set({ showVotes: show }),
 }));

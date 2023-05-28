@@ -52,8 +52,9 @@ function CardContainer({
   );
 }
 
-export function Table({ showVotes }: { showVotes: boolean }) {
+export function Table() {
   const raw_users = useStore((state) => state.users);
+  const showVotes = useStore((state) => state.showVotes);
   const users = Array.from(raw_users.values());
   const leftUsers = users.splice(2, 1);
   const rightUsers = users.splice(3, 1);
