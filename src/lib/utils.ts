@@ -21,6 +21,24 @@ export function getUsernameFromCookie(): string | undefined {
   return undefined;
 }
 
+export function removeRoomFromCookie(): void {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith('user=')) {
+      const user = JSON.parse(
+        decodeURIComponent(cookie.substring('user='.length))
+      );
+      if (!user) return;
+      // override the user cookie with path set to '/'
+      document.cookie = `user=${encodeURIComponent(
+        JSON.stringify({ ...user, room: undefined })
+      )};path=/`;
+      return;
+    }
+  }
+}
+
 export function getRoomIdFromUrl(): string | undefined {
   const urlParts = window.location.pathname.split('/');
   const roomId = urlParts[2];
