@@ -6,7 +6,7 @@ import { useEffect, useReducer, useState, useTransition } from 'react';
 import useSWR from 'swr';
 import Image from 'next/image';
 import { Table } from './Table';
-import { User } from '@/lib/types';
+import { Room, User } from '@/lib/types';
 import { resetVotes, showHideVotes } from '@/app/_actions';
 import { useStore } from '@/lib/zustand';
 
@@ -14,6 +14,8 @@ let didInit = false;
 let initialFetch = false;
 
 export function Users({ roomId }: { roomId: string }) {
+  const currentRoom = useStore((state) => state.currentRoom);
+  const setCurrentRoom = useStore((state) => state.setCurrentRoom);
   const addUser = useStore((state) => state.addUser);
   const addUsers = useStore((state) => state.addUsers);
   const updateUser = useStore((state) => state.updateUser);
@@ -73,6 +75,7 @@ export function Users({ roomId }: { roomId: string }) {
           },
           (payload) => {
             if (payload.new.id.toString() !== roomId) return;
+            setCurrentRoom(payload.new as Room);
             setShowVotes(payload.new.show_votes);
           }
         )
@@ -82,18 +85,21 @@ export function Users({ roomId }: { roomId: string }) {
         supabase.removeChannel(roomsChannel);
       };
     }
-  }, [addUser, roomId, updateUser, setShowVotes]);
+  }, [addUser, roomId, updateUser, setShowVotes, setCurrentRoom]);
 
   return (
     <div className='w-full h-full flex flex-col'>
       <div className='flex justify-between p-4'>
-        <div>
+        <div className='flex justify-center items-center gap-2'>
           <Image
             src='/***REMOVED***.svg'
             alt='Logo ***REMOVED***'
             width={26}
             height={31}
           />
+          <span className='ml-2 text-xl font-semibold'>
+            {currentRoom?.name}
+          </span>
         </div>
         <button
           type='button'

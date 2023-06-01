@@ -53,6 +53,6 @@ export const useStore = create<State>()(
     },
     setShowVotes: (show: boolean) => set({ showVotes: show }),
     currentRoom: undefined,
-    setCurrentRoom: (room: Room) => set({ currentRoom: room }),
+    setCurrentRoom: (room: Room | undefined) => set({ currentRoom: room }),
   }))
 );

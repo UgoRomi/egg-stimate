@@ -43,7 +43,8 @@ const Card: React.FC<CardProps> = ({ value }) => {
           // if every user has voted, toggle the votes
           if (
             Array.from(users.values()).every(
-              (user) => user.current_vote !== null
+              (user) =>
+                user.current_vote !== null || user.id === currentUser?.id
             )
           ) {
             const roomId = getRoomIdFromUrl();
