@@ -7,6 +7,8 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { cn, getRoomIdFromUrl, getUserFromCookie } from '@/lib/utils';
 import { useStore } from '@/lib/zustand';
 import { Results } from './Results';
+import toast from 'react-hot-toast';
+import { Copy } from 'lucide-react';
 
 interface CardProps {
   value: number;
@@ -64,7 +66,7 @@ export function Cards() {
 
   return (
     <div className='bg-white p-4 flex items-center flex-col'>
-      <div className='w-full px-8 flex mb-7'>
+      <div className='w-full flex mb-7'>
         <Avatar.Root className='bg-black inline-flex h-[45px] w-[45px] select-none items-center justify-center overflow-hidden rounded-full align-middle ml-auto mr-2'>
           <Avatar.Fallback className='text-orange-500 leading-1 flex h-full w-full items-center justify-center bg-orange-100 text-sm font-medium'>
             {username?.at(0)?.toUpperCase()}
@@ -72,10 +74,16 @@ export function Cards() {
         </Avatar.Root>
         <span className='mr-6 flex items-center'>{username}</span>
         <button
+          onClick={() => {
+            // copy the current URL to the clipboard
+            navigator.clipboard.writeText(window.location.href);
+            toast('Link copiato negli appunti');
+          }}
           type='button'
-          className='rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-orange-500 shadow-sm ring-1 ring-inset ring-orange-500 hover:bg-gray-50'
+          className='rounded-full flex justify-center items-center gap-2 bg-white px-4 py-2.5 text-sm font-semibold text-orange-500 shadow-sm ring-1 ring-inset ring-orange-500 hover:bg-gray-50'
         >
-          Invite players
+          <Copy />
+          Invita il team
         </button>
       </div>
       <div className='px-16 w-full h-full flex justify-center items-center'>
