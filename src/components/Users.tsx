@@ -1,7 +1,7 @@
 'use client';
 
 import { supabase } from '@/lib/supabase';
-import { fetcher } from '@/lib/utils';
+import { cn, fetcher } from '@/lib/utils';
 import { useEffect, useReducer, useState, useTransition } from 'react';
 import useSWR from 'swr';
 import Image from 'next/image';
@@ -95,18 +95,21 @@ export function Users({ roomId }: { roomId: string }) {
         />
         <button
           type='button'
-          className='rounded-full bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600'
-          onClick={() => startTransition(() => resetVotes(roomId))}
+          className={cn(
+            'rounded-full px-4 py-2.5 w-36 text-sm transition-all font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+            showVotes
+              ? 'bg-white text-orange-500 border-2 border-orange-500 hover:bg-orange-50 focus-visible:outline-white'
+              : 'bg-orange-500 text-white border-2 border-orange-500 hover:border-orange-600 hover:bg-orange-600 focus-visible:outline-orange-500'
+          )}
+          onClick={() => {
+            if (showVotes) {
+              startTransition(() => resetVotes(roomId));
+            } else {
+              startTransition(() => showHideVotes(roomId, true));
+            }
+          }}
         >
-          Resetta voti
-        </button>
-        <button
-          disabled={showVotes}
-          type='button'
-          className='rounded-full bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:opacity-50 disabled:cursor-not-allowed'
-          onClick={() => startTransition(() => showHideVotes(roomId, true))}
-        >
-          Mostra voti
+          {showVotes ? 'Vota ancora' : 'Scopri le carte'}
         </button>
       </div>
       <Table />
