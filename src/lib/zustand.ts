@@ -10,6 +10,7 @@ interface State {
   addUser: (user: User) => void;
   addUsers: (users: User[]) => void;
   updateUser: (user: User) => void;
+  updateUsers: (users: User[]) => void;
 }
 
 export const useStore = create<State>()(
@@ -31,6 +32,12 @@ export const useStore = create<State>()(
       set((state) => {
         const newUsers = new Map(state.users);
         return { users: newUsers.set(user.id, user) };
+      }),
+    updateUsers: (users: User[]) =>
+      set((state) => {
+        const newUsers = new Map(state.users);
+        users.forEach((user) => newUsers.set(user.id, user));
+        return { users: newUsers };
       }),
     getCurrentUser: () => {
       const userCookie = document.cookie

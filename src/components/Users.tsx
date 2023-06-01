@@ -105,6 +105,7 @@ export function Users({ roomId }: { roomId: string }) {
             if (showVotes) {
               startTransition(() => resetVotes(roomId));
             } else {
+              setShowVotes(true);
               startTransition(() => showHideVotes(roomId, true));
             }
           }}
