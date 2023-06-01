@@ -2,7 +2,6 @@ import { createRoom } from '@/app/_actions';
 import { SubmitButton } from './SubmitButton';
 
 export default function CreateRoomForm() {
-
   return (
     <form
       className='flex gap-6 flex-col justify-center items-center'
@@ -22,7 +21,7 @@ export default function CreateRoomForm() {
           />
         </div>
       </div>
-      <SubmitButton />
-    </form >
+      <SubmitButton text='Crea la super room' />
+    </form>
   );
 }

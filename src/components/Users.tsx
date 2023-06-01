@@ -98,7 +98,7 @@ export function Users({ roomId }: { roomId: string }) {
           className={cn(
             'rounded-full px-4 py-2.5 w-36 text-sm transition-all font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
             showVotes
-              ? 'bg-white text-orange-500 border-2 border-orange-500 hover:bg-orange-50 focus-visible:outline-white'
+              ? 'bg-white text-orange-500 border-2 border-orange-500 focus-visible:outline-white'
               : 'bg-orange-500 text-white border-2 border-orange-500 hover:border-orange-600 hover:bg-orange-600 focus-visible:outline-orange-500'
           )}
           onClick={() => {

@@ -1,7 +1,9 @@
-'use client'
+'use client';
 import { createRoomUser } from '@/app/_actions';
 import { SubmitButton } from './SubmitButton';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { Copy } from 'lucide-react';
 
 export function CreateUserForm({ roomId }: { roomId: string }) {
   const [name, setName] = useState('');
@@ -30,7 +32,25 @@ export function CreateUserForm({ roomId }: { roomId: string }) {
           />
         </div>
       </div>
-      <SubmitButton isDisabled={!name} />
+      <div className='flex gap-4'>
+        <button
+          onClick={() => {
+            // copy the current URL to the clipboard
+            navigator.clipboard.writeText(
+              window.location.href.endsWith('/signup')
+                ? window.location.href.replace('/signup', '')
+                : window.location.href
+            );
+            toast.success('Link copiato negli appunti');
+          }}
+          type='button'
+          className='rounded-full flex justify-center items-center gap-2 bg-transparent px-4 py-2.5 text-sm font-semibold text-orange-500 shadow-sm ring-1 ring-inset ring-orange-500'
+        >
+          <Copy />
+          Invita collegucci
+        </button>
+        <SubmitButton isDisabled={!name} text='Conferma' />
+      </div>
     </form>
   );
 }

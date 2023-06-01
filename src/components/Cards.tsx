@@ -77,10 +77,10 @@ export function Cards() {
           onClick={() => {
             // copy the current URL to the clipboard
             navigator.clipboard.writeText(window.location.href);
-            toast('Link copiato negli appunti');
+            toast.success('Link copiato negli appunti');
           }}
           type='button'
-          className='rounded-full flex justify-center items-center gap-2 bg-white px-4 py-2.5 text-sm font-semibold text-orange-500 shadow-sm ring-1 ring-inset ring-orange-500 hover:bg-gray-50'
+          className='rounded-full flex justify-center items-center gap-2 bg-white px-4 py-2.5 text-sm font-semibold text-orange-500 shadow-sm ring-1 ring-inset ring-orange-500'
         >
           <Copy />
           Invita il team
