@@ -30,7 +30,6 @@ export const useStore = create<State>()(
     updateUser: (user: User) =>
       set((state) => {
         const newUsers = new Map(state.users);
-        console.log('updateUser', user);
         return { users: newUsers.set(user.id, user) };
       }),
     getCurrentUser: () => {

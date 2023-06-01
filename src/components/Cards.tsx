@@ -17,8 +17,13 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ value }) => {
   let [, startTransition] = useTransition();
   const users = useStore((state) => state.users);
+  const updateUser = useStore((state) => state.updateUser);
   const userCookie = getUserFromCookie();
   const currentUser = !userCookie ? undefined : users.get(userCookie.id);
+  if (!currentUser) {
+    console.error('Current user not retrieved');
+    return null;
+  }
   const hasLowerFocus =
     currentUser?.current_vote !== undefined &&
     currentUser.current_vote !== null &&
@@ -35,6 +40,7 @@ const Card: React.FC<CardProps> = ({ value }) => {
         )}
         onClick={() => {
           startTransition(() => vote(value));
+          updateUser({ ...currentUser, current_vote: value });
           // if every user has voted, toggle the votes
           if (
             Array.from(users.values()).every(
