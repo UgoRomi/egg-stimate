@@ -12,7 +12,7 @@ export default function RootLayout({
           className='pt-4'
           src='/***REMOVED***.svg'
           alt='Logo ***REMOVED***'
-          width={141}
+          width={26}
           height={31}
         />
       </span>
@@ -28,6 +28,7 @@ export default function RootLayout({
             className='hidden md:block'
             width={638}
             height={377}
+            priority
           />
         </span>
       </main>

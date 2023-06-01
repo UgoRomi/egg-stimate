@@ -87,12 +87,14 @@ export function Users({ roomId }: { roomId: string }) {
   return (
     <div className='w-full h-full flex flex-col'>
       <div className='flex justify-between p-4'>
-        <Image
-          src='/***REMOVED***.svg'
-          alt='Logo ***REMOVED***'
-          width={141}
-          height={31}
-        />
+        <div>
+          <Image
+            src='/***REMOVED***.svg'
+            alt='Logo ***REMOVED***'
+            width={26}
+            height={31}
+          />
+        </div>
         <button
           type='button'
           className={cn(

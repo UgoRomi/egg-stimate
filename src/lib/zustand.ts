@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { User } from './types';
+import { Room, User } from './types';
 
 interface State {
   users: Map<number, User>;
+  currentRoom: Room | undefined;
   showVotes: boolean;
   getCurrentUser: () => User | undefined;
   setShowVotes: (show: boolean) => void;
@@ -11,6 +12,7 @@ interface State {
   addUsers: (users: User[]) => void;
   updateUser: (user: User) => void;
   updateUsers: (users: User[]) => void;
+  setCurrentRoom: (room: Room | undefined) => void;
 }
 
 export const useStore = create<State>()(
@@ -50,5 +52,7 @@ export const useStore = create<State>()(
       return user;
     },
     setShowVotes: (show: boolean) => set({ showVotes: show }),
+    currentRoom: undefined,
+    setCurrentRoom: (room: Room) => set({ currentRoom: room }),
   }))
 );

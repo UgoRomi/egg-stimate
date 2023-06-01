@@ -68,7 +68,7 @@ export function Table() {
     <div
       className={cn(
         'grid grid-areas-table flex-grow grid-cols-[1fr_5fr_1fr] grid-rows-[1fr_auto_1fr]',
-        users.length < 9 ? 'px-28' : 'px-16'
+        users.length < 9 ? 'lg:px-28 xl:px-36' : 'lg:px-16 xl:px-24'
       )}
     >
       <div className='w-full h-48 rounded-lg bg-orange-600 flex items-center justify-center grid-in-table'>

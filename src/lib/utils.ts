@@ -9,6 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 export const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export function getUserFromCookie(): User | undefined {
+  if (!document) return undefined;
   const cookies = document.cookie.split(';');
   for (let i = 0; i < cookies.length; i++) {
     const cookie = cookies[i].trim();

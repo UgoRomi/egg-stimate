@@ -21,7 +21,6 @@ const Card: React.FC<CardProps> = ({ value }) => {
   const userCookie = getUserFromCookie();
   const currentUser = !userCookie ? undefined : users.get(userCookie.id);
   if (!currentUser) {
-    console.error('Current user not retrieved');
     return null;
   }
   const hasLowerFocus =
@@ -44,8 +43,7 @@ const Card: React.FC<CardProps> = ({ value }) => {
           // if every user has voted, toggle the votes
           if (
             Array.from(users.values()).every(
-              (user) =>
-                user.current_vote !== null || user.id === currentUser?.id
+              (user) => user.current_vote !== null
             )
           ) {
             const roomId = getRoomIdFromUrl();
@@ -56,6 +54,7 @@ const Card: React.FC<CardProps> = ({ value }) => {
       >
         <AspectRatio.Root ratio={93 / 146}>
           <Image
+            priority
             src={`/cards/${value}.svg`}
             alt={`Scrum poker card ${value}`}
             fill
