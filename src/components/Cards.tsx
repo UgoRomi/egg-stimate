@@ -78,7 +78,7 @@ export function Cards() {
           Invite players
         </button>
       </div>
-      <div className='px-16 w-full'>
+      <div className='px-16 w-full h-full flex justify-center items-center'>
         {showVotes ? (
           <Results />
         ) : (

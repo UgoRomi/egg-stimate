@@ -13,7 +13,7 @@ function Card({
   showVote: boolean;
 }) {
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className='flex flex-col justify-center items-center w-28 gap-3'>
       <div
         className={cn(
           'rounded-md h-24 w-16',
@@ -33,7 +33,9 @@ function Card({
           </AspectRatio.Root>
         )}
       </div>
-      <span className='text-sm text-gray-500'>{username}</span>
+      <div className='max-w-full py-1 px-2 bg-orange-500 rounded-md truncate'>
+        <span className='text-sm text-white flex w-min'>{username}</span>
+      </div>
     </div>
   );
 }
@@ -46,9 +48,7 @@ function CardContainer({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={`p-5 h-full w-full flex justify-around items-center ${className}`}
-    >
+    <div className={`p-5 h-full w-full flex justify-around ${className}`}>
       {children}
     </div>
   );
@@ -65,13 +65,16 @@ export function Table() {
   const bottomUsers = users.slice(middleIndex);
 
   return (
-    <div className='grid grid-areas-table grid-cols-3 grid-rows-[1fr_2fr_1fr]'>
-      <div className='w-full h-full flex justify-center items-center'>
-        <div className='w-72 h-48 rounded-lg bg-orange-600 flex items-center justify-center grid-in-table'>
-          <p className='text-white'>Tutti pronti?</p>
-        </div>
+    <div
+      className={cn(
+        'grid grid-areas-table flex-grow grid-cols-[1fr_5fr_1fr] grid-rows-[1fr_auto_1fr]',
+        users.length < 9 ? 'px-28' : 'px-16'
+      )}
+    >
+      <div className='w-full h-48 rounded-lg bg-orange-600 flex items-center justify-center grid-in-table'>
+        <p className='text-white'>Tutti pronti?</p>
       </div>
-      <CardContainer className='grid-in-top'>
+      <CardContainer className='grid-in-top items-end'>
         {topUsers.map((user) => (
           <Card
             key={user.id}
@@ -91,7 +94,7 @@ export function Table() {
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-bottom'>
+      <CardContainer className='grid-in-bottom items-start'>
         {bottomUsers.map((user) => (
           <Card
             key={user.id}
