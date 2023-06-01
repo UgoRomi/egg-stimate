@@ -16,8 +16,10 @@ function Card({
     <div className='flex flex-col justify-center items-center'>
       <div
         className={cn(
-          'border rounded-md h-24 w-16 border-dashed border-orange-500',
-          vote !== null ? `bg-[url('/cards/${vote}.svg')]` : 'bg-white'
+          'rounded-md h-24 w-16',
+          vote !== null
+            ? `bg-[url('/cards/${vote}.svg')]`
+            : 'bg-white border-dashed border-orange-500 border'
         )}
       >
         {vote !== null && (

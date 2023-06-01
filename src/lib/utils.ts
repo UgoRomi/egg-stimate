@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { User } from './types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -7,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-export function getUsernameFromCookie(): string | undefined {
+export function getUserFromCookie(): User | undefined {
   const cookies = document.cookie.split(';');
   for (let i = 0; i < cookies.length; i++) {
     const cookie = cookies[i].trim();
@@ -15,7 +16,7 @@ export function getUsernameFromCookie(): string | undefined {
       const user = JSON.parse(
         decodeURIComponent(cookie.substring('user='.length))
       );
-      return user.name;
+      return user;
     }
   }
   return undefined;

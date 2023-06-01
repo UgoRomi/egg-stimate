@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useTransition } from 'react';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import * as Avatar from '@radix-ui/react-avatar';
-import { getRoomIdFromUrl, getUsernameFromCookie } from '@/lib/utils';
+import { cn, getRoomIdFromUrl, getUserFromCookie } from '@/lib/utils';
 import { useStore } from '@/lib/zustand';
 import { Results } from './Results';
 
@@ -15,39 +15,52 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ value }) => {
   let [, startTransition] = useTransition();
   const users = useStore((state) => state.users);
-  const currentUser = useStore((state) => state.getCurrentUser());
+  const userCookie = getUserFromCookie();
+  const currentUser = !userCookie ? undefined : users.get(userCookie.id);
+  const hasLowerFocus =
+    currentUser?.current_vote !== undefined &&
+    currentUser.current_vote !== null &&
+    currentUser.current_vote !== value;
+  const isCurrentVote = currentUser?.current_vote === value;
 
   return (
-    <div
-      className='max-w-[93px] max-h-[146px] cursor-pointer'
-      onClick={() => {
-        startTransition(() => vote(value));
-        // if every user has voted, toggle the votes
-        if (
-          Array.from(users.values()).every(
-            (user) => user.current_vote !== null || user.id === currentUser?.id
-          )
-        ) {
-          const roomId = getRoomIdFromUrl();
-          if (!roomId) return;
-          startTransition(() => showHideVotes(roomId, true));
-        }
-      }}
-    >
-      <AspectRatio.Root ratio={93 / 146}>
-        <Image
-          src={`/cards/${value}.svg`}
-          alt={`Scrum poker card ${value}`}
-          fill
-        />
-      </AspectRatio.Root>
+    <div className={cn('w-[120px] h-[189px] flex justify-center items-center')}>
+      <div
+        className={cn(
+          'w-[93px] h-[146px] cursor-pointer transition-all',
+          hasLowerFocus && 'opacity-50',
+          isCurrentVote && 'w-[120px] h-[189px]'
+        )}
+        onClick={() => {
+          startTransition(() => vote(value));
+          // if every user has voted, toggle the votes
+          if (
+            Array.from(users.values()).every(
+              (user) =>
+                user.current_vote !== null || user.id === currentUser?.id
+            )
+          ) {
+            const roomId = getRoomIdFromUrl();
+            if (!roomId) return;
+            startTransition(() => showHideVotes(roomId, true));
+          }
+        }}
+      >
+        <AspectRatio.Root ratio={93 / 146}>
+          <Image
+            src={`/cards/${value}.svg`}
+            alt={`Scrum poker card ${value}`}
+            fill
+          />
+        </AspectRatio.Root>
+      </div>
     </div>
   );
 };
 
 export function Cards() {
-  const username = getUsernameFromCookie();
   const showVotes = useStore((state) => state.showVotes);
+  const username = getUserFromCookie()?.name;
 
   return (
     <div className='bg-white p-4 flex items-center flex-col'>
@@ -69,7 +82,7 @@ export function Cards() {
         {showVotes ? (
           <Results />
         ) : (
-          <div className='grid grid-cols-[repeat(3,100px)] gap-7'>
+          <div className='grid grid-cols-[repeat(3,100px)] gap-x-7 gap-y-2'>
             <p className='col-span-3'>Scegli la tua carta 👇🏻</p>
             <Card value={0} />
             <Card value={1} />
