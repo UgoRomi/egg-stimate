@@ -2,7 +2,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { cn, fetcher } from '@/lib/utils';
-import { useEffect, useReducer, useState, useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import useSWR from 'swr';
 import Image from 'next/image';
 import { Table } from './Table';
@@ -91,12 +91,7 @@ export function Users({ roomId }: { roomId: string }) {
     <div className='w-full h-full flex flex-col'>
       <div className='flex justify-between p-4'>
         <div className='flex justify-center items-center gap-2'>
-          <Image
-            src='/***REMOVED***.svg'
-            alt='Logo ***REMOVED***'
-            width={26}
-            height={31}
-          />
+          <Image src='/logo.svg' alt='Logo' width={52} height={62} />
           <span className='ml-2 text-xl font-semibold'>
             {currentRoom?.name}
           </span>
