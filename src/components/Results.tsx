@@ -36,7 +36,10 @@ export function Results() {
           <div key={value} className='flex items-center gap-8 w-full'>
             <Card value={value} />
             <span className='flex-grow'>
-              <p className='text-xl font-bold'>{peopleWhoVoted.length} voti</p>
+              <p className='text-xl font-bold'>
+                {peopleWhoVoted.length}{' '}
+                {peopleWhoVoted.length === 1 ? 'voto' : 'voti'}
+              </p>
               <p className='text-sm text-gray-500 mb-2'>
                 {peopleWhoVoted.map((name, index) => (
                   <span key={name}>
