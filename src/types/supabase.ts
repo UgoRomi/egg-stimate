@@ -15,18 +15,21 @@ export interface Database {
           id: number
           name: string
           show_votes: boolean
+          updated_at: string | null
         }
         Insert: {
           created_at?: string | null
           id?: number
           name: string
           show_votes?: boolean
+          updated_at?: string | null
         }
         Update: {
           created_at?: string | null
           id?: number
           name?: string
           show_votes?: boolean
+          updated_at?: string | null
         }
       }
       users: {
@@ -34,6 +37,7 @@ export interface Database {
           created_at: string | null
           current_vote: number | null
           id: number
+          is_spectator: boolean
           name: string
           room: number
         }
@@ -41,6 +45,7 @@ export interface Database {
           created_at?: string | null
           current_vote?: number | null
           id?: number
+          is_spectator?: boolean
           name: string
           room: number
         }
@@ -48,6 +53,7 @@ export interface Database {
           created_at?: string | null
           current_vote?: number | null
           id?: number
+          is_spectator?: boolean
           name?: string
           room?: number
         }

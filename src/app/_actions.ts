@@ -19,6 +19,7 @@ export async function createRoom(formData: FormData) {
 export async function createRoomUser(formData: FormData) {
   const name = (formData.get('name') as string) || DEFAULT_USER_NAME;
   const roomId = formData.get('roomId') as string;
+  const isSpectator = formData.get('isSpectator') === 'true';
 
   const userCookie = cookies().get('user')?.value;
 
@@ -42,7 +43,7 @@ export async function createRoomUser(formData: FormData) {
 
   const { data, error } = await supabase
     .from('users')
-    .insert({ name, room: parseInt(roomId) })
+    .insert({ name, room: parseInt(roomId), is_spectator: isSpectator })
     .select();
 
   if (error) {
