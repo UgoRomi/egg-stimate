@@ -69,10 +69,19 @@ const Card: React.FC<CardProps> = ({ value }) => {
 export function Cards() {
   const showVotes = useStore((state) => state.showVotes);
   const username = getUserFromCookie()?.name;
+  const spectators = useStore((state) =>
+    Array.from(state.users.values()).filter((user) => user.is_spectator)
+  );
 
   return (
     <div className='bg-white p-4 flex items-center flex-col'>
       <div className='w-full flex mb-7'>
+        {spectators.length > 0 && (
+          <span>
+            👀 {spectators.length}{' '}
+            {spectators.length > 1 ? 'spettatori' : 'spettatore'}
+          </span>
+        )}
         <Avatar.Root className='bg-black inline-flex h-[45px] w-[45px] select-none items-center justify-center overflow-hidden rounded-full align-middle ml-auto mr-2'>
           <Avatar.Fallback className='text-orange-500 leading-1 flex h-full w-full items-center justify-center bg-orange-100 text-sm font-medium'>
             {username?.at(0)?.toUpperCase()}

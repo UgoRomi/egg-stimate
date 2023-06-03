@@ -57,7 +57,9 @@ function CardContainer({
 export function Table() {
   const raw_users = useStore((state) => state.users);
   const showVotes = useStore((state) => state.showVotes);
-  const users = Array.from(raw_users.values());
+  const users = Array.from(raw_users.values()).filter(
+    (user) => !user.is_spectator
+  );
   const leftUsers = users.splice(2, 1);
   const rightUsers = users.splice(3, 1);
   const middleIndex = Math.floor(users.length / 2);
