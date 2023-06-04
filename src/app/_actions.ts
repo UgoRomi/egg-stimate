@@ -19,7 +19,7 @@ export async function createRoom(formData: FormData) {
 export async function createRoomUser(formData: FormData) {
   const name = (formData.get('name') as string) || DEFAULT_USER_NAME;
   const roomId = formData.get('roomId') as string;
-  const isSpectator = formData.get('is_spectator') === 'true';
+  const isSpectator = formData.get('is_spectator') === 'on';
 
   const userCookie = cookies().get('user')?.value;
 
@@ -58,7 +58,7 @@ export async function createRoomUser(formData: FormData) {
 export async function updateUser(formData: FormData) {
   const userId = formData.get('userId') as string;
   const name = formData.get('name') as string;
-  const isSpectator = formData.get('is_spectator') === 'true';
+  const isSpectator = formData.get('is_spectator') === 'on';
 
   // it's possible that either name or isSpectator is not passed in
   // so we need to check for that
