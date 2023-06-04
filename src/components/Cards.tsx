@@ -1,14 +1,13 @@
 'use client';
-import { showHideVotes, vote } from '@/app/_actions';
+import { showHideVotes, updateUser, vote } from '@/app/_actions';
 import Image from 'next/image';
 import { useTransition } from 'react';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
-import * as Avatar from '@radix-ui/react-avatar';
 import { cn, getRoomIdFromUrl, getUserFromCookie } from '@/lib/utils';
 import { useStore } from '@/lib/zustand';
 import { Results } from './Results';
 import toast from 'react-hot-toast';
-import { ArrowDown, ArrowDown01, ChevronDown, Copy } from 'lucide-react';
+import { Copy } from 'lucide-react';
 import { UserProfile } from './UserProfile';
 
 interface CardProps {
@@ -70,7 +69,11 @@ const Card: React.FC<CardProps> = ({ value }) => {
 };
 
 export function Cards() {
+  const users = useStore((state) => state.users);
+  const userCookie = getUserFromCookie();
+  const currentUser = !userCookie ? undefined : users.get(userCookie.id);
   const showVotes = useStore((state) => state.showVotes);
+  const [isPending, startTransition] = useTransition();
   const spectators = useStore((state) =>
     Array.from(state.users.values()).filter((user) => user.is_spectator)
   );
@@ -101,6 +104,33 @@ export function Cards() {
       <div className='px-16 w-full h-full flex justify-center items-center'>
         {showVotes ? (
           <Results />
+        ) : currentUser?.is_spectator ? (
+          <div className='h-full flex justify-center items-center flex-col'>
+            <span className='text-6xl mb-3'>👀</span>
+            <span className='text-xl mb-2 font-semibold'>
+              Oggi sei uno spettatore!
+            </span>
+            <span className='text-center mb-6'>
+              In questa modalità non ti è consentito votare. Se cambi idea puoi
+              unirti alla partita quando vuoi 🧡
+            </span>
+            <button
+              disabled={isPending}
+              onClick={() => {
+                const formData = new FormData();
+                formData.append(
+                  'is_spectator',
+                  (!currentUser.is_spectator).toString()
+                );
+                formData.append('name', currentUser.name);
+                formData.append('userId', currentUser.id.toString());
+                startTransition(() => updateUser(formData));
+              }}
+              className='rounded-full bg-orange-500 cursor-pointer px-5 py-3 text-md text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 disabled:opacity-50 disabled:cursor-not-allowed'
+            >
+              Ho cambiato idea
+            </button>
+          </div>
         ) : (
           <div className='grid grid-cols-[repeat(3,100px)] gap-x-7 gap-y-2'>
             <p className='col-span-3'>Scegli la tua carta 👇🏻</p>

@@ -58,7 +58,7 @@ export async function createRoomUser(formData: FormData) {
 export async function updateUser(formData: FormData) {
   const userId = formData.get('userId') as string;
   const name = formData.get('name') as string;
-  const isSpectator = formData.get('isSpectator') === 'true';
+  const isSpectator = formData.get('is_spectator') === 'true';
 
   // it's possible that either name or isSpectator is not passed in
   // so we need to check for that
@@ -74,7 +74,6 @@ export async function updateUser(formData: FormData) {
 
   // @ts-ignore bug in NextJs types
   cookies().set('user', JSON.stringify(data[0]));
-  return { data, error };
 }
 
 export async function updateUserName(formData: FormData) {
