@@ -1,6 +1,7 @@
 import { useStore } from '@/lib/zustand';
 import { useMemo } from 'react';
 import { Card } from './Card';
+import Image from 'next/image';
 
 export function Results() {
   const users = useStore((state) => state.users);
@@ -26,37 +27,58 @@ export function Results() {
   }, [users]);
   return (
     <div className='flex flex-col gap-5 w-full'>
-      <span className='text-md'>Ecco cosa ha votato il team 👇</span>
-      {votes.map(([value, peopleWhoVoted]) => {
-        const percentage = Math.round(
-          (peopleWhoVoted.length / users.size) * 100
-        );
-
-        return (
-          <div key={value} className='flex items-center gap-8 w-full'>
-            <Card value={value} />
-            <span className='flex-grow'>
-              <p className='text-xl font-bold'>
-                {peopleWhoVoted.length}{' '}
-                {peopleWhoVoted.length === 1 ? 'voto' : 'voti'}
-              </p>
-              <p className='text-sm text-gray-500 mb-2'>
-                {peopleWhoVoted.map((name, index) => (
-                  <span key={name}>
-                    {name}
-                    {index !== peopleWhoVoted.length - 1 && ', '}
-                  </span>
-                ))}
-              </p>
-              <div className='w-full h-3 bg-orange-300 rounded-full'>
-                <div
-                  className={`h-full bg-orange-500 w-[${percentage}%] rounded-full`}
-                ></div>
-              </div>
+      {votes.length === 1 ? (
+        <>
+          <Card size='large' value={votes[0][0]} className='self-center' />
+          <span className='flex flex-col gap-1 items-center'>
+            <span className='font-bold text-4xl capitalize block text-center'>
+              TOP, BELLA!
             </span>
-          </div>
-        );
-      })}
+            <span className='text-center'>Siete tutti d’accordo 🏄🏻‍♀️</span>
+          </span>
+          <Image
+            src={`/good-job.svg`}
+            alt={`Good job badge`}
+            width={144}
+            height={144}
+            className='absolute bottom-7 right-7'
+          />
+        </>
+      ) : (
+        <>
+          <span className='text-md'>Ecco cosa ha votato il team 👇</span>
+          {votes.map(([value, peopleWhoVoted]) => {
+            const percentage = Math.round(
+              (peopleWhoVoted.length / users.size) * 100
+            );
+
+            return (
+              <div key={value} className='flex items-center gap-8 w-full'>
+                <Card value={value} />
+                <span className='flex-grow'>
+                  <p className='text-xl font-bold'>
+                    {peopleWhoVoted.length}{' '}
+                    {peopleWhoVoted.length === 1 ? 'voto' : 'voti'}
+                  </p>
+                  <p className='text-sm text-gray-500 mb-2'>
+                    {peopleWhoVoted.map((name, index) => (
+                      <span key={name}>
+                        {name}
+                        {index !== peopleWhoVoted.length - 1 && ', '}
+                      </span>
+                    ))}
+                  </p>
+                  <div className='w-full h-3 bg-orange-300 rounded-full'>
+                    <div
+                      className={`h-full bg-orange-500 w-[${percentage}%] rounded-full`}
+                    ></div>
+                  </div>
+                </span>
+              </div>
+            );
+          })}
+        </>
+      )}
     </div>
   );
 }

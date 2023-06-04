@@ -34,13 +34,16 @@ export function CreateUserForm({ roomId }: { roomId: string }) {
         </div>
       </div>
       <div className='flex items-center'>
+        <label htmlFor='is_spectator' className='pr-3'>
+          Entro come spettatore 👀
+        </label>
         <Switch.Root
           name='is_spectator'
-          className='bg-orange-200 w-[42px] h-[25px] bg-blackA9 rounded-full relative shadow-sm shadow-orange-300 focus:shadow-[0_0_0_2px] focus:shadow-orange-300 data-[state=checked]:bg-orange-500 outline-none cursor-default'
-          id='airplane-mode'
+          className='bg-gray-200 w-[42px] h-[25px] bg-blackA9 rounded-full relative shadow-sm shadow-gray-300 focus:shadow-[0_0_0_2px] focus:shadow-orange-300 data-[state=checked]:shadow-orange-300 data-[state=checked]:bg-orange-500 outline-none cursor-default'
+          id='is_spectator'
           style={{ WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)' }}
         >
-          <Switch.Thumb className='block w-[21px] h-[21px] bg-white rounded-full shadow-[0_2px_2px] shadow-orange-300 transition-transform duration-100 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[19px]' />
+          <Switch.Thumb className='block w-[21px] h-[21px] bg-white rounded-full shadow-[0_2px_2px] shadow-gray-300 transition-transform duration-100 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[19px] data-[state=checked]:shadow-orange-300' />
         </Switch.Root>
       </div>
       <div className='flex gap-4'>
