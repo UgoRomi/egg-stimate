@@ -10,12 +10,12 @@ export async function GET(request: NextRequest) {
   });
 }
 
-export async function DELETE(request: NextRequest) {
+export function DELETE(request: NextRequest) {
   const urlParts = request.nextUrl.pathname.split('/');
   const roomId = urlParts[urlParts.length - 2];
   const userToken = JSON.parse(request.cookies.get('user')?.value || '');
   const userId = userToken?.id;
   if (userId) {
-    await supabase.from('users').delete().eq('room', roomId).eq('id', userId);
+    supabase.from('users').delete().eq('room', roomId).eq('id', userId);
   }
 }

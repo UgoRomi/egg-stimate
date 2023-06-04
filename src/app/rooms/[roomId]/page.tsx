@@ -20,9 +20,9 @@ export default function Page({ params }: { params: { roomId: string } }) {
     },
   });
   useEffect(() => {
-    const callback = async (ev: BeforeUnloadEvent) => {
+    const callback = (ev: BeforeUnloadEvent) => {
       removeRoomFromCookie();
-      await fetch(`/api/rooms/${params.roomId}/users`, {
+      fetch(`/api/rooms/${params.roomId}/users`, {
         method: 'DELETE',
       });
     };
