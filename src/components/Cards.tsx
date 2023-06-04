@@ -94,7 +94,8 @@ export function Cards() {
     };
 
     updateVote();
-  }, [debouncedVote, currentUser?.id, users]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedVote, currentUser?.id, users.size]);
 
   if (!currentUser) {
     return null;
