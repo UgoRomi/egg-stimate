@@ -9,6 +9,7 @@ import { useStore } from '@/lib/zustand';
 import { Results } from './Results';
 import toast from 'react-hot-toast';
 import { ArrowDown, ArrowDown01, ChevronDown, Copy } from 'lucide-react';
+import { UserProfile } from './UserProfile';
 
 interface CardProps {
   value: number;
@@ -44,7 +45,9 @@ const Card: React.FC<CardProps> = ({ value }) => {
           if (
             Array.from(users.values()).every(
               (user) =>
-                user.current_vote !== null || user.id === currentUser?.id
+                user.current_vote !== null ||
+                user.id === currentUser?.id ||
+                user.is_spectator
             )
           ) {
             const roomId = getRoomIdFromUrl();
@@ -68,7 +71,6 @@ const Card: React.FC<CardProps> = ({ value }) => {
 
 export function Cards() {
   const showVotes = useStore((state) => state.showVotes);
-  const username = getUserFromCookie()?.name;
   const spectators = useStore((state) =>
     Array.from(state.users.values()).filter((user) => user.is_spectator)
   );
@@ -82,16 +84,7 @@ export function Cards() {
             {spectators.length > 1 ? 'spettatori' : 'spettatore'}
           </span>
         )}
-        <button className='flex items-center ml-auto mr-4'>
-          <Avatar.Root className='bg-black inline-flex h-[45px] w-[45px] select-none items-center justify-center overflow-hidden rounded-full align-middle ml-auto mr-2'>
-            <Avatar.Fallback className='text-orange-500 leading-1 flex h-full w-full items-center justify-center bg-orange-100 text-sm font-medium'>
-              {username?.at(0)?.toUpperCase()}
-            </Avatar.Fallback>
-          </Avatar.Root>
-          <span className='flex items-center'>
-            {username} <ChevronDown />
-          </span>
-        </button>
+        <UserProfile />
         <button
           onClick={() => {
             // copy the current URL to the clipboard

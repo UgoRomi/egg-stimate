@@ -90,11 +90,9 @@ export function Users({ roomId }: { roomId: string }) {
   return (
     <div className='w-full h-full flex flex-col'>
       <div className='flex justify-between p-4'>
-        <div className='flex justify-center items-center gap-2'>
-          <Image src='/logo.svg' alt='Logo' width={52} height={62} />
-          <span className='ml-2 text-xl font-semibold'>
-            {currentRoom?.name}
-          </span>
+        <div className='flex justify-center items-center gap-1'>
+          <Image src='/logo-no-text.svg' alt='Logo' width={52} height={62} />
+          <span className='text-xl font-semibold'>{currentRoom?.name}</span>
         </div>
         <button
           type='button'

@@ -4,19 +4,16 @@ import { SubmitButton } from './SubmitButton';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Copy } from 'lucide-react';
-import { Switch } from '@headlessui/react';
-import { cn } from '@/lib/utils';
+import * as Switch from '@radix-ui/react-switch';
 
 export function CreateUserForm({ roomId }: { roomId: string }) {
   const [name, setName] = useState('');
-  const [spectator, setSpectator] = useState(false);
 
   return (
     <form
       className='flex gap-6 flex-col justify-center items-center'
       action={async (formData) => {
         formData.append('roomId', roomId);
-        formData.append('isSpectator', spectator.toString());
         await createRoomUser(formData);
       }}
     >
@@ -37,29 +34,14 @@ export function CreateUserForm({ roomId }: { roomId: string }) {
         </div>
       </div>
       <div className='flex items-center'>
-        <Switch.Group as='div' className='flex items-center'>
-          <Switch
-            checked={spectator}
-            onChange={setSpectator}
-            className={cn(
-              spectator ? 'bg-orange-600' : 'bg-gray-200',
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2'
-            )}
-          >
-            <span
-              aria-hidden='true'
-              className={cn(
-                spectator ? 'translate-x-5' : 'translate-x-0',
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
-              )}
-            />
-          </Switch>
-          <Switch.Label as='span' className='ml-3 text-sm'>
-            <span className='font-medium text-gray-900'>
-              Entro come spettatore 👀
-            </span>
-          </Switch.Label>
-        </Switch.Group>
+        <Switch.Root
+          name='is_spectator'
+          className='bg-orange-200 w-[42px] h-[25px] bg-blackA9 rounded-full relative shadow-sm shadow-orange-300 focus:shadow-[0_0_0_2px] focus:shadow-orange-300 data-[state=checked]:bg-orange-500 outline-none cursor-default'
+          id='airplane-mode'
+          style={{ WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)' }}
+        >
+          <Switch.Thumb className='block w-[21px] h-[21px] bg-white rounded-full shadow-[0_2px_2px] shadow-orange-300 transition-transform duration-100 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[19px]' />
+        </Switch.Root>
       </div>
       <div className='flex gap-4'>
         <button

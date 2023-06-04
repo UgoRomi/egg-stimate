@@ -60,6 +60,7 @@ export function Table() {
   const users = Array.from(raw_users.values()).filter(
     (user) => !user.is_spectator
   );
+  const room = useStore((state) => state.currentRoom);
   const leftUsers = users.splice(2, 1);
   const rightUsers = users.splice(3, 1);
   const middleIndex = Math.floor(users.length / 2);
@@ -74,7 +75,13 @@ export function Table() {
       )}
     >
       <div className='w-full h-48 rounded-lg bg-orange-600 flex items-center justify-center grid-in-table'>
-        <p className='text-white'>Tutti pronti?</p>
+        <p className='text-white'>
+          {!!room?.show_votes
+            ? 'Carte scoperte 💫'
+            : users.some((user) => user.current_vote !== null)
+            ? 'Ci siamo quasi 🥁🥁🥁'
+            : 'Tutti pronti?'}
+        </p>
       </div>
       <CardContainer className='grid-in-top items-end'>
         {topUsers.map((user) => (

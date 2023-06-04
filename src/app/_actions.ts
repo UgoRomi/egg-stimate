@@ -19,7 +19,7 @@ export async function createRoom(formData: FormData) {
 export async function createRoomUser(formData: FormData) {
   const name = (formData.get('name') as string) || DEFAULT_USER_NAME;
   const roomId = formData.get('roomId') as string;
-  const isSpectator = formData.get('isSpectator') === 'true';
+  const isSpectator = formData.get('is_spectator') === 'true';
 
   const userCookie = cookies().get('user')?.value;
 
@@ -53,6 +53,28 @@ export async function createRoomUser(formData: FormData) {
   // @ts-ignore bug in NextJs types
   cookies().set('user', JSON.stringify(data[0]));
   return redirect(`/rooms/${roomId}`);
+}
+
+export async function updateUser(formData: FormData) {
+  const userId = formData.get('userId') as string;
+  const name = formData.get('name') as string;
+  const isSpectator = formData.get('isSpectator') === 'true';
+
+  // it's possible that either name or isSpectator is not passed in
+  // so we need to check for that
+  const { data, error } = await supabase
+    .from('users')
+    .update({ name, is_spectator: isSpectator })
+    .eq('id', userId)
+    .select();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  // @ts-ignore bug in NextJs types
+  cookies().set('user', JSON.stringify(data[0]));
+  return { data, error };
 }
 
 export async function updateUserName(formData: FormData) {
