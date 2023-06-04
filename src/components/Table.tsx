@@ -48,7 +48,9 @@ function CardContainer({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`p-5 h-full w-full flex justify-around ${className}`}>
+    <div
+      className={cn(`p-5 h-full w-full flex justify-center gap-12`, className)}
+    >
       {children}
     </div>
   );
@@ -60,9 +62,10 @@ export function Table() {
   const users = Array.from(raw_users.values()).filter(
     (user) => !user.is_spectator
   );
+  const userLength = users.length;
   const room = useStore((state) => state.currentRoom);
-  const leftUsers = users.splice(2, 1);
-  const rightUsers = users.splice(3, 1);
+  const leftUsers = users.splice(2, users.length >= 7 ? 2 : 1);
+  const rightUsers = users.splice(2, users.length >= 6 ? 2 : 1);
   const middleIndex = Math.floor(users.length / 2);
   const topUsers = users.slice(0, middleIndex);
   const bottomUsers = users.slice(middleIndex);
@@ -76,9 +79,9 @@ export function Table() {
       <div
         className={cn(
           'h-40 rounded-lg bg-orange-600 flex items-center justify-center grid-in-table mx-auto',
-          users.length > 10
+          userLength > 10
             ? 'w-[400px]'
-            : users.length > 4
+            : userLength > 4
             ? 'w-[270px]'
             : 'w-[204px]'
         )}
@@ -101,7 +104,7 @@ export function Table() {
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-right'>
+      <CardContainer className='grid-in-right justify-center flex-col'>
         {rightUsers.map((user) => (
           <Card
             key={user.id}
@@ -121,7 +124,7 @@ export function Table() {
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-left'>
+      <CardContainer className='grid-in-left justify-center flex-col items-end'>
         {leftUsers.map((user) => (
           <Card
             key={user.id}

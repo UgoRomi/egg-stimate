@@ -8,11 +8,7 @@ module.exports = {
   theme: {
     extend: {
       gridTemplateAreas: {
-        table: [
-          'top    top    top',
-          'left   table   right',
-          'bottom   bottom  bottom',
-        ],
+        table: ['left top right', 'left table right', 'left bottom right'],
       },
     },
   },
