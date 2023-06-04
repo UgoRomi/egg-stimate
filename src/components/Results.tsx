@@ -68,9 +68,10 @@ export function Results() {
                       </span>
                     ))}
                   </p>
-                  <div className='w-full h-3 bg-orange-300 rounded-full'>
+                  <div className='w-full h-3 bg-orange-100 rounded-full'>
                     <div
-                      className={`h-full bg-orange-500 w-[${percentage}%] rounded-full`}
+                      className={`h-full bg-orange-500 rounded-full`}
+                      style={{ width: `${percentage}%` }}
                     ></div>
                   </div>
                 </span>
