@@ -13,7 +13,7 @@ function Card({
   showVote: boolean;
 }) {
   return (
-    <div className='flex flex-col justify-center items-center w-28 gap-3'>
+    <div className='flex flex-col justify-center items-center w-20 gap-3'>
       <div
         className={cn(
           'rounded-md h-24 w-16',
@@ -33,7 +33,7 @@ function Card({
           </AspectRatio.Root>
         )}
       </div>
-      <div className='max-w-full py-1 px-2 bg-orange-500 rounded-md truncate'>
+      <div className='max-w-full p-1 bg-orange-500 rounded-md truncate'>
         <span className='text-sm text-white flex w-min'>{username}</span>
       </div>
     </div>
@@ -48,9 +48,7 @@ function CardContainer({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={cn(`p-5 h-full w-full flex justify-center gap-12`, className)}
-    >
+    <div className={cn(`h-full w-full flex justify-center gap-12`, className)}>
       {children}
     </div>
   );
@@ -94,7 +92,7 @@ export function Table() {
             : 'Tutti pronti?'}
         </p>
       </div>
-      <CardContainer className='grid-in-top items-end'>
+      <CardContainer className='grid-in-top items-end pb-20'>
         {topUsers.map((user) => (
           <Card
             key={user.id}
@@ -104,7 +102,7 @@ export function Table() {
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-right justify-center flex-col'>
+      <CardContainer className='grid-in-right justify-center flex-col pl-16'>
         {rightUsers.map((user) => (
           <Card
             key={user.id}
@@ -114,7 +112,7 @@ export function Table() {
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-bottom items-start'>
+      <CardContainer className='grid-in-bottom items-start pt-20'>
         {bottomUsers.map((user) => (
           <Card
             key={user.id}
@@ -124,7 +122,7 @@ export function Table() {
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-left justify-center flex-col items-end'>
+      <CardContainer className='grid-in-left justify-center flex-col items-end pr-16'>
         {leftUsers.map((user) => (
           <Card
             key={user.id}
