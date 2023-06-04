@@ -69,12 +69,20 @@ export function Table() {
 
   return (
     <div
-      className={cn(
-        'grid grid-areas-table flex-grow grid-cols-[1fr_5fr_1fr] grid-rows-[1fr_auto_1fr]',
-        users.length < 9 ? 'lg:px-28 xl:px-36' : 'lg:px-16 xl:px-24'
-      )}
+      className={
+        'grid grid-areas-table flex-grow grid-cols-[1fr_auto_1fr] grid-rows-[1fr_auto_1fr]'
+      }
     >
-      <div className='w-full h-48 rounded-lg bg-orange-600 flex items-center justify-center grid-in-table'>
+      <div
+        className={cn(
+          'h-40 rounded-lg bg-orange-600 flex items-center justify-center grid-in-table mx-auto',
+          users.length > 10
+            ? 'w-[400px]'
+            : users.length > 4
+            ? 'w-[270px]'
+            : 'w-[204px]'
+        )}
+      >
         <p className='text-white'>
           {!!room?.show_votes
             ? 'Carte scoperte 💫'
