@@ -124,7 +124,7 @@ export function Cards() {
           Invita il team
         </button>
       </div>
-      <div className='px-16 w-full h-full flex justify-center items-center'>
+      <div className='px-10 w-full h-full flex justify-center items-center'>
         {showVotes ? (
           <Results />
         ) : currentUser?.is_spectator ? (
@@ -155,20 +155,22 @@ export function Cards() {
             </button>
           </div>
         ) : (
-          <div className='grid grid-cols-[repeat(3,100px)] gap-x-7 gap-y-2'>
-            <p className='col-span-3'>Scegli la tua carta 👇🏻</p>
-            <Card value={0} onClick={setVote} />
-            <Card value={1} onClick={setVote} />
-            <Card value={2} onClick={setVote} />
-            <Card value={3} onClick={setVote} />
-            <Card value={4} onClick={setVote} />
-            <Card value={5} onClick={setVote} />
-            <Card value={6} onClick={setVote} />
-            <Card value={7} onClick={setVote} />
-            <Card value={8} onClick={setVote} />
-            <Card value={9} onClick={setVote} />
-            <Card value={10} onClick={setVote} />
-            <Card value={11} onClick={setVote} />
+          <div className='flex flex-col'>
+            <p>Scegli la tua carta 👇🏻</p>
+            <div className='grid grid-cols-[repeat(3,120px)] gap-x-7 gap-y-2 max-h-[83vh] overflow-scroll'>
+              <Card value={0} onClick={setVote} />
+              <Card value={1} onClick={setVote} />
+              <Card value={2} onClick={setVote} />
+              <Card value={3} onClick={setVote} />
+              <Card value={4} onClick={setVote} />
+              <Card value={5} onClick={setVote} />
+              <Card value={6} onClick={setVote} />
+              <Card value={7} onClick={setVote} />
+              <Card value={8} onClick={setVote} />
+              <Card value={9} onClick={setVote} />
+              <Card value={10} onClick={setVote} />
+              <Card value={11} onClick={setVote} />
+            </div>
           </div>
         )}
       </div>

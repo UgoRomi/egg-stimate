@@ -92,7 +92,7 @@ export function Table() {
             : 'Tutti pronti?'}
         </p>
       </div>
-      <CardContainer className='grid-in-top items-end pb-20'>
+      <CardContainer className='grid-in-top items-end pb-16'>
         {topUsers.map((user) => (
           <Card
             key={user.id}
@@ -112,7 +112,7 @@ export function Table() {
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-bottom items-start pt-20'>
+      <CardContainer className='grid-in-bottom items-start pt-16'>
         {bottomUsers.map((user) => (
           <Card
             key={user.id}
