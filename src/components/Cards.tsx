@@ -5,7 +5,7 @@ import {
   vote as voteAction,
 } from '@/app/_actions';
 import Image from 'next/image';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import { cn, getRoomIdFromUrl, getUserFromCookie } from '@/lib/utils';
 import { useStore } from '@/lib/zustand';
@@ -67,6 +67,7 @@ export function Cards() {
   const currentUser = !userCookie ? undefined : users.get(userCookie.id);
   const showVotes = useStore((state) => state.showVotes);
   const [isPending, startTransition] = useTransition();
+  const ref = useRef<HTMLDivElement>(null);
   const spectators = useStore((state) =>
     Array.from(state.users.values()).filter((user) => user.is_spectator)
   );
@@ -157,7 +158,15 @@ export function Cards() {
         ) : (
           <div className='flex flex-col'>
             <p>Scegli la tua carta 👇🏻</p>
-            <div className='grid grid-cols-[repeat(3,120px)] gap-x-7 gap-y-2 max-h-[83vh] overflow-scroll'>
+            <div
+              ref={ref}
+              className='grid grid-cols-[repeat(3,120px)] gap-x-7 gap-y-2 overflow-y-auto'
+              style={{
+                maxHeight: `calc(100vh - ${
+                  ref.current?.offsetTop ?? 0
+                }px - 16px)`,
+              }}
+            >
               <Card value={0} onClick={setVote} />
               <Card value={1} onClick={setVote} />
               <Card value={2} onClick={setVote} />

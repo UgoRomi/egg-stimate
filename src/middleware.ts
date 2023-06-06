@@ -31,16 +31,12 @@ export async function middleware(request: NextRequest) {
   //#region upsert user
   // otherwise check if the user's ID is already in the room
   const parsedUserCookie = JSON.parse(userCookie);
-  console.log('parsed cookie', parsedUserCookie);
-  console.log('room id', roomId);
   if (parsedUserCookie.room === roomId) return;
   // upsert the user
   const { data, error: upsertError } = await supabase
     .from('users')
     .upsert({ ...parsedUserCookie, room: roomId })
     .select();
-  console.log('data', data);
-  console.log('error', upsertError);
 
   if (upsertError || !data) {
     return NextResponse.redirect(
