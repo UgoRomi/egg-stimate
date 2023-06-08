@@ -4,6 +4,7 @@ import { DEFAULT_USER_NAME } from '@/lib/consts';
 import { supabase } from '@/lib/supabase';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { User } from '@/lib/types';
 
 export async function createRoom(formData: FormData) {
   const name = (formData.get('name') as string) || 'Unobraslow';
@@ -56,15 +57,37 @@ export async function createRoomUser(formData: FormData) {
 }
 
 export async function updateUser(formData: FormData) {
-  const userId = formData.get('userId') as string;
+  const userId = parseInt(formData.get('userId') as string);
   const name = formData.get('name') as string;
   const isSpectator = formData.get('is_spectator') === 'on';
+  let userCookie = cookies().get('user')?.value;
+  if (!userCookie) {
+    console.warn('User cookie not found, fetching from DB');
+    const { data: userFromDb } = await supabase
+      .from('users')
+      .select()
+      .eq('id', userId)
+      .single();
+    if (!userFromDb) {
+      throw new Error('User not found');
+    }
+    userCookie = JSON.stringify(userFromDb);
+  }
+  const currentUser = JSON.parse(userCookie) as User;
 
-  // it's possible that either name or isSpectator is not passed in
-  // so we need to check for that
+  // need to do this cause somehow updating the name to the same name causes the whole thing to be skipped
+  // and is_spectator is not updated
+  const updateObj: { name?: string; is_spectator?: boolean } = {};
+  if (name !== currentUser.name) {
+    updateObj.name = name;
+  }
+  if (isSpectator !== currentUser.is_spectator) {
+    updateObj.is_spectator = isSpectator;
+  }
+
   const { data, error } = await supabase
     .from('users')
-    .update({ name, is_spectator: isSpectator })
+    .update(updateObj)
     .eq('id', userId)
     .select();
 

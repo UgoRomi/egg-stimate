@@ -9,6 +9,7 @@ import { Table } from './Table';
 import { Room, User } from '@/lib/types';
 import { resetVotes, showHideVotes } from '@/app/_actions';
 import { useStore } from '@/lib/zustand';
+import Link from 'next/link';
 
 let didInit = false;
 let initialFetch = false;
@@ -90,10 +91,10 @@ export function Users({ roomId }: { roomId: string }) {
   return (
     <div className='w-full h-full flex flex-col'>
       <div className='flex justify-between p-4'>
-        <div className='flex justify-center items-center gap-1'>
+        <Link className='flex justify-center items-center gap-1' href='/'>
           <Image src='/logo-no-text.svg' alt='Logo' width={52} height={62} />
           <span className='text-xl font-semibold'>{currentRoom?.name}</span>
-        </div>
+        </Link>
         <button
           type='button'
           className={cn(
