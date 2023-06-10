@@ -1,3 +1,4 @@
+import LottiePlayer from '@/components/LottiePlayer';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         {children}
         <Toaster position='bottom-right' />
+        <LottiePlayer />
       </body>
     </html>
   );

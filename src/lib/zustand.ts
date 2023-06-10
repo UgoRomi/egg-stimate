@@ -6,6 +6,7 @@ interface State {
   users: Map<number, User>;
   currentRoom: Room | undefined;
   showVotes: boolean;
+  lottie: string | undefined;
   getCurrentUser: () => User | undefined;
   setShowVotes: (show: boolean) => void;
   addUser: (user: User) => void;
@@ -13,12 +14,14 @@ interface State {
   updateUser: (user: User) => void;
   updateUsers: (users: User[]) => void;
   setCurrentRoom: (room: Room | undefined) => void;
+  setLottie: (lottie: string | undefined) => void;
 }
 
 export const useStore = create<State>()(
   devtools((set) => ({
     users: new Map(),
     showVotes: false,
+    lottie: undefined,
     addUser: (user: User) =>
       set((state) => {
         const newUsers = new Map(state.users);
@@ -54,5 +57,6 @@ export const useStore = create<State>()(
     setShowVotes: (show: boolean) => set({ showVotes: show }),
     currentRoom: undefined,
     setCurrentRoom: (room: Room | undefined) => set({ currentRoom: room }),
+    setLottie: (lottie: string | undefined) => set({ lottie: lottie }),
   }))
 );
