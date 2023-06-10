@@ -1,36 +1,51 @@
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import { useStore } from '@/lib/zustand';
 
-function Card({
-  username,
-  vote,
-  showVote,
-}: {
+const cards = {
+  0: 'bg-[url("/cards/0.svg")]',
+  1: 'bg-[url("/cards/1.svg")]',
+  2: 'bg-[url("/cards/2.svg")]',
+  3: 'bg-[url("/cards/3.svg")]',
+  4: 'bg-[url("/cards/4.svg")]',
+  5: 'bg-[url("/cards/5.svg")]',
+  6: 'bg-[url("/cards/6.svg")]',
+  7: 'bg-[url("/cards/7.svg")]',
+  8: 'bg-[url("/cards/8.svg")]',
+  9: 'bg-[url("/cards/9.svg")]',
+  10: 'bg-[url("/cards/10.svg")]',
+  11: 'bg-[url("/cards/11.svg")]',
+};
+
+interface CardProps {
   username: string;
-  vote: number | null;
+  vote: keyof typeof cards | null;
   showVote: boolean;
-}) {
+}
+
+function Card({ username, vote, showVote }: CardProps) {
   return (
     <div className='flex flex-col justify-center items-center w-20 gap-3'>
       <div
         className={cn(
-          'rounded-md h-24 w-16',
+          'rounded-md h-24 w-16 relative [transform-style:preserve-3d] duration-300',
           vote !== null
-            ? `bg-[url('/cards/${vote}.svg')]`
-            : 'bg-white border-dashed border-orange-500 border'
+            ? ``
+            : 'bg-white border-dashed border-orange-500 border',
+          vote !== null && showVote ? '[transform:rotateY(180deg)]' : ''
         )}
       >
         {vote !== null && (
-          <AspectRatio.Root ratio={93 / 146}>
-            <Image
-              src={showVote ? `/cards/${vote}.svg` : '/cards/back.svg'}
-              alt={`Scrum poker card ${vote}`}
-              style={{ objectFit: 'contain' }}
-              fill
-            />
-          </AspectRatio.Root>
+          <>
+            <div
+              className={cn(
+                `absolute top-0 left-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-contain bg-no-repeat`,
+                vote ? cards[vote] : ''
+              )}
+            ></div>
+            <div
+              className={`absolute top-0 left-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(0deg)] bg-[url('/cards/back.svg')] bg-contain bg-no-repeat`}
+            ></div>
+          </>
         )}
       </div>
       <div className='max-w-full p-1 bg-orange-500 rounded-md truncate'>
@@ -97,7 +112,7 @@ export function Table() {
           <Card
             key={user.id}
             username={user.name}
-            vote={user.current_vote}
+            vote={user.current_vote as CardProps['vote']}
             showVote={showVotes}
           />
         ))}
@@ -107,7 +122,7 @@ export function Table() {
           <Card
             key={user.id}
             username={user.name}
-            vote={user.current_vote}
+            vote={user.current_vote as CardProps['vote']}
             showVote={showVotes}
           />
         ))}
@@ -117,7 +132,7 @@ export function Table() {
           <Card
             key={user.id}
             username={user.name}
-            vote={user.current_vote}
+            vote={user.current_vote as CardProps['vote']}
             showVote={showVotes}
           />
         ))}
@@ -127,7 +142,7 @@ export function Table() {
           <Card
             key={user.id}
             username={user.name}
-            vote={user.current_vote}
+            vote={user.current_vote as CardProps['vote']}
             showVote={showVotes}
           />
         ))}
