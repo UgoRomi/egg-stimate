@@ -31,6 +31,7 @@ export interface Database {
           show_votes?: boolean
           updated_at?: string | null
         }
+        Relationships: []
       }
       users: {
         Row: {
@@ -57,6 +58,14 @@ export interface Database {
           name?: string
           room?: number
         }
+        Relationships: [
+          {
+            foreignKeyName: "users_room_fkey"
+            columns: ["room"]
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {

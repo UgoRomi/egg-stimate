@@ -5,7 +5,7 @@ import {
   vote as voteAction,
 } from '@/app/_actions';
 import Image from 'next/image';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import { cn, getRoomIdFromUrl, getUserFromCookie } from '@/lib/utils';
 import { useStore } from '@/lib/zustand';
@@ -44,8 +44,8 @@ const Card: React.FC<CardProps> = ({ value, onClick }) => {
           isCurrentVote && 'w-[120px] h-[189px]'
         )}
         onClick={() => {
-          updateUser({ ...currentUser, current_vote: value });
           onClick(value);
+          updateUser({ ...currentUser, current_vote: value });
         }}
       >
         <AspectRatio.Root ratio={93 / 146}>
@@ -72,31 +72,26 @@ export function Cards() {
     Array.from(state.users.values()).filter((user) => user.is_spectator)
   );
 
-  const [vote, setVote] = useState<number | undefined>(undefined);
-  const debouncedVote = useDebounce(vote, 500);
-  useEffect(() => {
-    const updateVote = async () => {
-      if (debouncedVote) {
-        startTransition(() => voteAction(debouncedVote));
-        // if every user has voted, toggle the votes
-        if (
-          Array.from(users.values()).every(
-            (user) =>
-              user.current_vote !== null ||
-              user.id === currentUser?.id ||
-              user.is_spectator
-          )
-        ) {
-          const roomId = getRoomIdFromUrl();
-          if (!roomId) return;
-          startTransition(() => showHideVotes(roomId, true));
-        }
+  const submitVote = useCallback(
+    (vote: number) => {
+      console.log('dentro', vote);
+      startTransition(() => voteAction(vote));
+      // if every user has voted, toggle the votes
+      if (
+        Array.from(users.values()).every(
+          (user) =>
+            user.current_vote !== null ||
+            user.id === currentUser?.id ||
+            user.is_spectator
+        )
+      ) {
+        const roomId = getRoomIdFromUrl();
+        if (!roomId) return;
+        startTransition(() => showHideVotes(roomId, true));
       }
-    };
-
-    updateVote();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedVote, currentUser?.id, users.size]);
+    },
+    [currentUser?.id, users]
+  );
 
   if (!currentUser) {
     return null;
@@ -167,18 +162,18 @@ export function Cards() {
                 }px - 16px)`,
               }}
             >
-              <Card value={0} onClick={setVote} />
-              <Card value={1} onClick={setVote} />
-              <Card value={2} onClick={setVote} />
-              <Card value={3} onClick={setVote} />
-              <Card value={4} onClick={setVote} />
-              <Card value={5} onClick={setVote} />
-              <Card value={6} onClick={setVote} />
-              <Card value={7} onClick={setVote} />
-              <Card value={8} onClick={setVote} />
-              <Card value={9} onClick={setVote} />
-              <Card value={10} onClick={setVote} />
-              <Card value={11} onClick={setVote} />
+              <Card value={0} onClick={submitVote} />
+              <Card value={1} onClick={submitVote} />
+              <Card value={2} onClick={submitVote} />
+              <Card value={3} onClick={submitVote} />
+              <Card value={4} onClick={submitVote} />
+              <Card value={5} onClick={submitVote} />
+              <Card value={6} onClick={submitVote} />
+              <Card value={7} onClick={submitVote} />
+              <Card value={8} onClick={submitVote} />
+              <Card value={9} onClick={submitVote} />
+              <Card value={10} onClick={submitVote} />
+              <Card value={11} onClick={submitVote} />
             </div>
           </div>
         )}
