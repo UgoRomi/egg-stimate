@@ -1,8 +1,7 @@
 import { useStore } from '@/lib/zustand';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Card } from './Card';
 import Image from 'next/image';
-import { Player } from '@lottiefiles/react-lottie-player';
 
 export function Results() {
   const users = useStore((state) => state.users);
@@ -24,11 +23,14 @@ export function Results() {
       }
     }
     // sort the votes by most voted
-    const newArray = Array.from(votes.entries()).sort(
+    return Array.from(votes.entries()).sort(
       (a, b) => b[1].length - a[1].length
     );
-    if (newArray.length === 1) {
-      if (newArray[0][0] === 4) {
+  }, [users]);
+
+  useEffect(() => {
+    if (votes.length === 1) {
+      if (votes[0][0] === 4) {
         // delfini
         setLottie(
           'https://assets7.lottiefiles.com/packages/lf20_ep5xgsuo.json'
@@ -40,8 +42,8 @@ export function Results() {
         );
       }
     }
-    return newArray;
-  }, [users, setLottie]);
+  }, [votes, setLottie]);
+
   return (
     <div className='flex flex-col gap-5 w-full'>
       {votes.length === 1 ? (
