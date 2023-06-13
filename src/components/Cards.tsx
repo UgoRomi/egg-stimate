@@ -13,8 +13,6 @@ import { Results } from './Results';
 import toast from 'react-hot-toast';
 import { Copy } from 'lucide-react';
 import { UserProfile } from './UserProfile';
-// @ts-expect-error missing types
-import { useDebounce } from '@uidotdev/usehooks';
 
 interface CardProps {
   value: number;
@@ -74,7 +72,6 @@ export function Cards() {
 
   const submitVote = useCallback(
     (vote: number) => {
-      console.log('dentro', vote);
       startTransition(() => voteAction(vote));
       // if every user has voted, toggle the votes
       if (
