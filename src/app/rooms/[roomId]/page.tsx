@@ -29,6 +29,10 @@ export default function Page({ params }: { params: { roomId: string } }) {
     window.addEventListener('beforeunload', callback);
     return () => {
       window.removeEventListener('beforeunload', callback);
+      removeRoomFromCookie();
+      fetch(`/api/rooms/${params.roomId}/users`, {
+        method: 'DELETE',
+      });
     };
   }, [params.roomId]);
 

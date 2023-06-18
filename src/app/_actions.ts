@@ -36,7 +36,6 @@ export async function createRoomUser(formData: FormData) {
       if (error) {
         throw new Error(error.message);
       }
-      // @ts-ignore bug in NextJs types
       cookies().set('user', JSON.stringify(data[0]));
       return redirect(`/rooms/${roomId}`);
     }
@@ -51,7 +50,6 @@ export async function createRoomUser(formData: FormData) {
     throw new Error(error.message);
   }
 
-  // @ts-ignore bug in NextJs types
   cookies().set('user', JSON.stringify(data[0]));
   return redirect(`/rooms/${roomId}`);
 }
@@ -95,7 +93,6 @@ export async function updateUser(formData: FormData) {
     throw new Error(error.message);
   }
 
-  // @ts-ignore bug in NextJs types
   cookies().set('user', JSON.stringify(data[0]));
 }
 
@@ -112,7 +109,6 @@ export async function updateUserName(formData: FormData) {
     throw new Error(error.message);
   }
 
-  // @ts-ignore bug in NextJs types
   cookies().set('user', JSON.stringify(data[0]));
   return { data, error };
 }

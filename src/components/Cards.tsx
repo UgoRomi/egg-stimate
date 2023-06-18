@@ -5,7 +5,7 @@ import {
   vote as voteAction,
 } from '@/app/_actions';
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useRef, useTransition } from 'react';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import { cn, getRoomIdFromUrl, getUserFromCookie } from '@/lib/utils';
 import { useStore } from '@/lib/zustand';

@@ -49,7 +49,6 @@ export async function middleware(request: NextRequest) {
   //#endregion
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
   matcher: '/rooms/:path*',
 };
