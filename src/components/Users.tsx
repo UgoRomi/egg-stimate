@@ -19,6 +19,7 @@ export function Users({ roomId }: { roomId: string }) {
   const currentRoom = useStore((state) => state.currentRoom);
   const setCurrentRoom = useStore((state) => state.setCurrentRoom);
   const addUser = useStore((state) => state.addUser);
+  const deleteUser = useStore((state) => state.deleteUser);
   const addUsers = useStore((state) => state.addUsers);
   const updateUser = useStore((state) => state.updateUser);
   const showVotes = useStore((state) => state.showVotes);
@@ -47,9 +48,9 @@ export function Users({ roomId }: { roomId: string }) {
             event: 'INSERT',
             schema: 'public',
             table: 'users',
+            filter: `room=eq.${roomId}`,
           },
           (payload) => {
-            if (payload.new.room.toString() !== roomId) return;
             addUser(payload.new as User);
           }
         )
@@ -59,10 +60,22 @@ export function Users({ roomId }: { roomId: string }) {
             event: 'UPDATE',
             schema: 'public',
             table: 'users',
+            filter: `room=eq.${roomId}`,
           },
           (payload) => {
-            if (payload.new.room.toString() !== roomId) return;
             updateUser(payload.new as User);
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'DELETE',
+            schema: 'public',
+            table: 'users',
+            filter: `room=eq.${roomId}`,
+          },
+          (payload) => {
+            deleteUser(payload.old.id);
           }
         )
         .subscribe();
@@ -75,10 +88,9 @@ export function Users({ roomId }: { roomId: string }) {
             event: 'UPDATE',
             schema: 'public',
             table: 'rooms',
+            filter: `id=eq.${roomId}`,
           },
           (payload) => {
-            console.log('payload.new', payload.new);
-            if (payload.new.id.toString() !== roomId) return;
             setCurrentRoom(payload.new as Room);
             setShowVotes(payload.new.show_votes);
             if (!currentRoom?.show_votes && !!payload.new.show_votes) {

@@ -10,6 +10,7 @@ interface State {
   getCurrentUser: () => User | undefined;
   setShowVotes: (show: boolean) => void;
   addUser: (user: User) => void;
+  deleteUser: (userId: number) => void;
   addUsers: (users: User[]) => void;
   updateUser: (user: User) => void;
   updateUsers: (users: User[]) => void;
@@ -26,6 +27,13 @@ export const useStore = create<State>()(
       set((state) => {
         const newUsers = new Map(state.users);
         return { users: newUsers.set(user.id, user) };
+      }),
+    deleteUser: (userId: number) =>
+      set((state) => {
+        const newUsers = new Map(state.users);
+        if (!newUsers.has(userId)) return { users: newUsers };
+        newUsers.delete(userId);
+        return { users: newUsers };
       }),
     addUsers: (users: User[]) =>
       set((state) => {
