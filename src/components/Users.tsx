@@ -10,6 +10,7 @@ import { Room, User } from '@/lib/types';
 import { resetVotes, showHideVotes } from '@/app/_actions';
 import { useStore } from '@/lib/zustand';
 import Link from 'next/link';
+import { useVoteCalculation } from '@/lib/hooks';
 
 let didInit = false;
 let initialFetch = false;
@@ -22,6 +23,7 @@ export function Users({ roomId }: { roomId: string }) {
   const updateUser = useStore((state) => state.updateUser);
   const showVotes = useStore((state) => state.showVotes);
   const setShowVotes = useStore((state) => state.setShowVotes);
+  const { showLottie } = useVoteCalculation();
   const [, startTransition] = useTransition();
 
   useSWR(`/api/rooms/${roomId}/users`, fetcher, {
@@ -75,9 +77,13 @@ export function Users({ roomId }: { roomId: string }) {
             table: 'rooms',
           },
           (payload) => {
+            console.log('payload.new', payload.new);
             if (payload.new.id.toString() !== roomId) return;
             setCurrentRoom(payload.new as Room);
             setShowVotes(payload.new.show_votes);
+            if (!currentRoom?.show_votes && !!payload.new.show_votes) {
+              showLottie();
+            }
           }
         )
         .subscribe();
@@ -86,6 +92,7 @@ export function Users({ roomId }: { roomId: string }) {
         supabase.removeChannel(roomsChannel);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addUser, roomId, updateUser, setShowVotes, setCurrentRoom]);
 
   return (
@@ -104,9 +111,13 @@ export function Users({ roomId }: { roomId: string }) {
               : 'bg-orange-500 text-white border-2 border-orange-500 hover:border-orange-600 hover:bg-orange-600 focus-visible:outline-orange-500'
           )}
           onClick={() => {
+            console.log('CLICKed');
+            console.log('showVotes', showVotes);
+
             if (showVotes) {
               startTransition(() => resetVotes(roomId));
             } else {
+              showLottie();
               setShowVotes(true);
               startTransition(() => showHideVotes(roomId, true));
             }

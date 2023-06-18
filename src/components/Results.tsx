@@ -1,12 +1,11 @@
 import { useStore } from '@/lib/zustand';
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Card } from './Card';
 import Image from 'next/image';
 
 export function Results() {
   const users = useStore((state) => state.users);
   const ref = useRef<HTMLDivElement>(null);
-  const setLottie = useStore((state) => state.setLottie);
   const votes = useMemo(() => {
     // show for each result how many times it was voted, ordered by most voted.
     // And keep track of who voted what
@@ -27,22 +26,6 @@ export function Results() {
       (a, b) => b[1].length - a[1].length
     );
   }, [users]);
-
-  useEffect(() => {
-    if (votes.length === 1) {
-      if (votes[0][0] === 4) {
-        // delfini
-        setLottie(
-          'https://assets7.lottiefiles.com/packages/lf20_ep5xgsuo.json'
-        );
-      } else {
-        // default, confetti
-        setLottie(
-          'https://assets1.lottiefiles.com/packages/lf20_obhph3sh.json'
-        );
-      }
-    }
-  }, [votes, setLottie]);
 
   return (
     <div className='flex flex-col gap-5 w-full'>
