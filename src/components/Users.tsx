@@ -114,29 +114,33 @@ export function Users({ roomId }: { roomId: string }) {
           <Image src='/logo-no-text.svg' alt='Logo' width={52} height={62} />
           <span className='text-xl font-semibold'>{currentRoom?.name}</span>
         </Link>
-        <button
-          type='button'
-          className={cn(
-            'rounded-full px-4 py-2.5 w-36 text-sm transition-all font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
-            showVotes
-              ? 'bg-white text-orange-500 border-2 border-orange-500 focus-visible:outline-white'
-              : 'bg-orange-500 text-white border-2 border-orange-500 hover:border-orange-600 hover:bg-orange-600 focus-visible:outline-orange-500'
-          )}
-          onClick={() => {
-            console.log('CLICKed');
-            console.log('showVotes', showVotes);
-
-            if (showVotes) {
-              startTransition(() => resetVotes(roomId));
-            } else {
+        <div className='flex gap-2'>
+          <button
+            type='button'
+            className={
+              'rounded-full px-4 py-2.5 w-36 text-sm transition-all font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-orange-500 text-white border-2 border-orange-500 hover:border-orange-600 hover:bg-orange-600 focus-visible:outline-orange-500'
+            }
+            disabled={showVotes}
+            onClick={() => {
               showLottie();
               setShowVotes(true);
               startTransition(() => showHideVotes(roomId, true));
+            }}
+          >
+            Scopri le carte
+          </button>
+          <button
+            type='button'
+            className={
+              'rounded-full px-4 py-2.5 w-36 text-sm transition-all font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-white text-orange-500 border-2 border-orange-500 focus-visible:outline-white'
             }
-          }}
-        >
-          {showVotes ? 'Vota ancora' : 'Scopri le carte'}
-        </button>
+            onClick={() => {
+              startTransition(() => resetVotes(roomId));
+            }}
+          >
+            Vota ancora
+          </button>
+        </div>
       </div>
       <Table />
     </div>
