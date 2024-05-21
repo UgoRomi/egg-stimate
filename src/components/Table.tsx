@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
-import { useStore } from '@/lib/zustand';
+import { cn } from "@/lib/utils";
+import { useStore } from "@/lib/zustand";
 
 const cards = {
   0: 'bg-[url("/cards/0.svg")]',
@@ -14,6 +14,9 @@ const cards = {
   9: 'bg-[url("/cards/9.svg")]',
   10: 'bg-[url("/cards/10.svg")]',
   11: 'bg-[url("/cards/11.svg")]',
+  12: 'bg-[url("/cards/12.svg")]',
+  13: 'bg-[url("/cards/13.svg")]',
+  14: 'bg-[url("/cards/14.svg")]',
 };
 
 interface CardProps {
@@ -24,14 +27,14 @@ interface CardProps {
 
 function Card({ username, vote, showVote }: CardProps) {
   return (
-    <div className='flex flex-col justify-center items-center w-20 gap-3'>
+    <div className="flex flex-col justify-center items-center w-20 gap-3">
       <div
         className={cn(
-          'rounded-md h-24 w-16 relative [transform-style:preserve-3d] duration-300',
+          "rounded-md h-24 w-16 relative [transform-style:preserve-3d] duration-300",
           vote !== null
             ? ``
-            : 'bg-white border-dashed border-orange-500 border',
-          vote !== null && showVote ? '[transform:rotateY(180deg)]' : ''
+            : "bg-white border-dashed border-orange-500 border",
+          vote !== null && showVote ? "[transform:rotateY(180deg)]" : ""
         )}
       >
         {vote !== null && (
@@ -39,7 +42,7 @@ function Card({ username, vote, showVote }: CardProps) {
             <div
               className={cn(
                 `absolute top-0 left-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-contain bg-no-repeat`,
-                vote ? cards[vote] : ''
+                vote ? cards[vote] : ""
               )}
             ></div>
             <div
@@ -48,8 +51,8 @@ function Card({ username, vote, showVote }: CardProps) {
           </>
         )}
       </div>
-      <div className='max-w-full p-1 bg-orange-500 rounded-md truncate'>
-        <span className='text-sm text-white flex w-min'>{username}</span>
+      <div className="max-w-full p-1 bg-orange-500 rounded-md truncate">
+        <span className="text-sm text-white flex w-min">{username}</span>
       </div>
     </div>
   );
@@ -86,63 +89,63 @@ export function Table() {
   return (
     <div
       className={
-        'grid grid-areas-table flex-grow grid-cols-[1fr_auto_1fr] grid-rows-[1fr_auto_1fr]'
+        "grid grid-areas-table flex-grow grid-cols-[1fr_auto_1fr] grid-rows-[1fr_auto_1fr]"
       }
     >
       <div
         className={cn(
-          'h-40 rounded-lg bg-orange-600 flex items-center justify-center grid-in-table mx-auto',
+          "h-40 rounded-lg bg-orange-600 flex items-center justify-center grid-in-table mx-auto",
           userLength > 10
-            ? 'w-[400px]'
+            ? "w-[400px]"
             : userLength > 4
-            ? 'w-[270px]'
-            : 'w-[204px]'
+            ? "w-[270px]"
+            : "w-[204px]"
         )}
       >
-        <p className='text-white'>
+        <p className="text-white">
           {!!room?.show_votes
-            ? 'Carte scoperte 💫'
+            ? "Carte scoperte 💫"
             : users.some((user) => user.current_vote !== null)
-            ? 'Ci siamo quasi 🥁🥁🥁'
-            : 'Tutti pronti?'}
+            ? "Ci siamo quasi 🥁🥁🥁"
+            : "Tutti pronti?"}
         </p>
       </div>
-      <CardContainer className='grid-in-top items-end pb-16'>
+      <CardContainer className="grid-in-top items-end pb-16">
         {topUsers.map((user) => (
           <Card
             key={user.id}
             username={user.name}
-            vote={user.current_vote as CardProps['vote']}
+            vote={user.current_vote as CardProps["vote"]}
             showVote={showVotes}
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-right justify-center flex-col pl-16'>
+      <CardContainer className="grid-in-right justify-center flex-col pl-16">
         {rightUsers.map((user) => (
           <Card
             key={user.id}
             username={user.name}
-            vote={user.current_vote as CardProps['vote']}
+            vote={user.current_vote as CardProps["vote"]}
             showVote={showVotes}
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-bottom items-start pt-16'>
+      <CardContainer className="grid-in-bottom items-start pt-16">
         {bottomUsers.map((user) => (
           <Card
             key={user.id}
             username={user.name}
-            vote={user.current_vote as CardProps['vote']}
+            vote={user.current_vote as CardProps["vote"]}
             showVote={showVotes}
           />
         ))}
       </CardContainer>
-      <CardContainer className='grid-in-left justify-center flex-col items-end pr-16'>
+      <CardContainer className="grid-in-left justify-center flex-col items-end pr-16">
         {leftUsers.map((user) => (
           <Card
             key={user.id}
             username={user.name}
-            vote={user.current_vote as CardProps['vote']}
+            vote={user.current_vote as CardProps["vote"]}
             showVote={showVotes}
           />
         ))}

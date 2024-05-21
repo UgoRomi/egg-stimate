@@ -41,8 +41,8 @@ export function removeRoomFromCookie(): void {
   }
 }
 
-export function getRoomIdFromUrl(): string | undefined {
+export function getRoomIdFromUrl(): string {
   const urlParts = window.location.pathname.split('/');
   const roomId = urlParts[2];
-  return roomId || undefined;
+  return roomId;
 }
