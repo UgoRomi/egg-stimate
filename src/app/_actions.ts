@@ -4,13 +4,14 @@ import { DEFAULT_USER_NAME } from '@/lib/consts';
 import { supabase } from '@/lib/supabase';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { User } from '@/lib/types';
+import { User, RoomType } from '@/lib/types';
 
 export async function createRoom(formData: FormData) {
   const name = (formData.get('name') as string) || 'Unobraslow';
+  const type = (formData.get('type') || 'refinement') as RoomType;
   const { data, error } = await supabase
     .from('rooms')
-    .insert({ name })
+    .insert({ name, type })
     .select();
   if (error) throw new Error(error.message);
   if (!data) throw new Error('No data returned');
