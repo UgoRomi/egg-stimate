@@ -1,16 +1,17 @@
-'use client';
+"use client";
 
-import { supabase } from '@/lib/supabase';
-import { cn, fetcher } from '@/lib/utils';
-import { useEffect, useTransition } from 'react';
-import useSWR from 'swr';
-import Image from 'next/image';
-import { Table } from './Table';
-import { Room, User } from '@/lib/types';
-import { resetVotes, showHideVotes } from '@/app/_actions';
-import { useStore } from '@/lib/zustand';
-import Link from 'next/link';
-import { useVoteCalculation } from '@/lib/hooks';
+import { supabase } from "@/lib/supabase";
+import { cn, fetcher } from "@/lib/utils";
+import { useEffect, useTransition } from "react";
+import useSWR from "swr";
+import Image from "next/image";
+import { Table } from "./Table";
+import { Room, User } from "@/lib/types";
+import { resetVotes, showHideVotes } from "@/app/_actions";
+import { useStore } from "@/lib/zustand";
+import Link from "next/link";
+import { useVoteCalculation } from "@/lib/hooks";
+import { PanicButton } from "./PanicButton";
 
 let didInit = false;
 let initialFetch = false;
@@ -41,13 +42,13 @@ export function Users({ roomId }: { roomId: string }) {
       didInit = true;
       // Subscribe to the user events
       const usersChannel = supabase
-        .channel('users')
+        .channel("users")
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'users',
+            event: "INSERT",
+            schema: "public",
+            table: "users",
             filter: `room=eq.${roomId}`,
           },
           (payload) => {
@@ -55,11 +56,11 @@ export function Users({ roomId }: { roomId: string }) {
           }
         )
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: 'UPDATE',
-            schema: 'public',
-            table: 'users',
+            event: "UPDATE",
+            schema: "public",
+            table: "users",
             filter: `room=eq.${roomId}`,
           },
           (payload) => {
@@ -67,11 +68,11 @@ export function Users({ roomId }: { roomId: string }) {
           }
         )
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: 'DELETE',
-            schema: 'public',
-            table: 'users',
+            event: "DELETE",
+            schema: "public",
+            table: "users",
             filter: `room=eq.${roomId}`,
           },
           (payload) => {
@@ -81,13 +82,13 @@ export function Users({ roomId }: { roomId: string }) {
         .subscribe();
 
       const roomsChannel = supabase
-        .channel('rooms')
+        .channel("rooms")
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: 'UPDATE',
-            schema: 'public',
-            table: 'rooms',
+            event: "UPDATE",
+            schema: "public",
+            table: "rooms",
             filter: `id=eq.${roomId}`,
           },
           (payload) => {
@@ -108,17 +109,18 @@ export function Users({ roomId }: { roomId: string }) {
   }, [addUser, roomId, updateUser, setShowVotes, setCurrentRoom]);
 
   return (
-    <div className='w-full h-full flex flex-col'>
-      <div className='flex justify-between p-4'>
-        <Link className='flex justify-center items-center gap-1' href='/'>
-          <Image src='/logo-no-text.svg' alt='Logo' width={52} height={62} />
-          <span className='text-xl font-semibold'>{currentRoom?.name}</span>
+    <div className="w-full h-full flex flex-col">
+      <div className="flex justify-between p-4">
+        <Link className="flex justify-center items-center gap-1" href="/">
+          <Image src="/logo-no-text.svg" alt="Logo" width={52} height={62} />
+          <span className="text-xl font-semibold">{currentRoom?.name}</span>
         </Link>
-        <div className='flex gap-2'>
+        <div className="flex gap-2 w-full">
+          <PanicButton />
           <button
-            type='button'
+            type="button"
             className={
-              'rounded-full px-4 py-2.5 w-36 text-sm transition-all font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-orange-500 text-white border-2 border-orange-500 hover:border-orange-600 hover:bg-orange-600 focus-visible:outline-orange-500'
+              "rounded-full px-4 py-2.5 w-36 text-sm transition-all font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-orange-500 text-white border-2 border-orange-500 hover:border-orange-600 hover:bg-orange-600 focus-visible:outline-orange-500"
             }
             disabled={showVotes}
             onClick={() => {
@@ -130,9 +132,9 @@ export function Users({ roomId }: { roomId: string }) {
             Scopri le carte
           </button>
           <button
-            type='button'
+            type="button"
             className={
-              'rounded-full px-4 py-2.5 w-36 text-sm transition-all font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-white text-orange-500 border-2 border-orange-500 focus-visible:outline-white'
+              "rounded-full px-4 py-2.5 w-36 text-sm transition-all font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-white text-orange-500 border-2 border-orange-500 focus-visible:outline-white"
             }
             onClick={() => {
               startTransition(() => resetVotes(roomId));
